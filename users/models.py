@@ -1,6 +1,8 @@
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models.functions import Lower
+from django.utils.translation import gettext_lazy as _
 
 
 class User(AbstractUser):
@@ -31,6 +33,18 @@ class User(AbstractUser):
     # The name comes from first_name / last_name (AbstractUser).
     phone = models.CharField("phone", max_length=30, blank=True)
     address = models.TextField("delivery address", blank=True)
+
+    # The language the user chose with the switcher in the navbar (saved by
+    # config.views.set_language). Used where there is no request to take
+    # the language from: the emails (also those sent from the Stripe
+    # webhook) and the language cookie that the login sets.
+    language = models.CharField(
+        _("language"),
+        max_length=10,
+        choices=settings.LANGUAGES,
+        default=settings.LANGUAGE_CODE,
+        help_text=_("Language of the site and of the emails."),
+    )
 
     # Extra fields that `createsuperuser` asks for (besides USERNAME_FIELD
     # and password). AbstractUser already has ["email"]; kept explicit.

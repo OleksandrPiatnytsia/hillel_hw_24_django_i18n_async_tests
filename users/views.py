@@ -9,8 +9,11 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import redirect, resolve_url
 from django.urls import reverse_lazy
+from django.utils import translation
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.generic import CreateView, TemplateView, UpdateView
+
+from config.i18n import set_language_cookie
 
 from .forms import LoginForm, ProfileForm, SignUpForm
 
@@ -33,6 +36,18 @@ class UserLoginView(SuccessMessageMixin, LoginView):
     redirect_authenticated_user = True
     success_message = "Welcome back, %(username)s!"
     extra_context = {"title": "Log in", "submit_label": "Log in"}
+
+    def form_valid(self, form):
+        """Log in, then switch the site to the language saved in the profile.
+
+        activate() first: the "Welcome back" message is made in this
+        language. The cookie: the next requests come in it too (on a new
+        device, or after somebody switched the language as a guest).
+        """
+        language = form.get_user().language
+        translation.activate(language)
+        response = super().form_valid(form)
+        return set_language_cookie(response, language)
 
 
 class UserLogoutView(LogoutView):
@@ -61,6 +76,9 @@ class SignUpView(SuccessMessageMixin, CreateView):
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
+        # The language the guest is using the site in right now (chosen by
+        # LocaleMiddleware): emails to the new user come in it
+        form.instance.language = translation.get_language()
         # super() saves the user (self.object) and returns the redirect
         response = super().form_valid(form)
         # filter().first() instead of get(): if the group is missing (e.g. it

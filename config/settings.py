@@ -15,6 +15,7 @@ import sys
 from importlib.util import find_spec
 from pathlib import Path
 
+from django.utils.translation import gettext_lazy as _
 from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -80,6 +81,10 @@ MIDDLEWARE = [
     # sessions, auth, CSRF and the rest below.
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    # Chooses the language of every request (see "Internationalization"
+    # below) and activates it for the view and the templates. After
+    # SessionMiddleware, before CommonMiddleware (Django docs).
+    "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -212,7 +217,35 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/6.1/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+#
+# Two languages: Ukrainian (default) and English. The texts in the code and
+# the templates stay in English (msgid); the Ukrainian translations are in
+# locale/uk/LC_MESSAGES/django.po (compiled to django.mo).
+#
+# How the language of a request is chosen (LocaleMiddleware), first match wins:
+#   1. the "django_language" cookie: set by the switcher in the navbar
+#      (config.views.set_language) and at login (the user's saved language);
+#   2. the Accept-Language header of the browser (a first visit);
+#   3. LANGUAGE_CODE.
+# No language prefix in the URLs (/uk/..., i18n_patterns): Stripe's return
+# URLs, the webhook and the links in emails stay the same for everybody.
+
+LANGUAGE_CODE = "uk"
+
+# Only these two can be activated. gettext_lazy: the names are translated
+# when shown (the switcher shows the native names, see navbar.html).
+LANGUAGES = [
+    ("uk", _("Ukrainian")),
+    ("en", _("English")),
+]
+
+# Our translations (makemessages / compilemessages); Django's own (admin,
+# form errors, ...) come with Django.
+LOCALE_PATHS = [BASE_DIR / "locale"]
+
+# The language cookie lives a year. Default None = until the browser is
+# closed: the site would switch back to Ukrainian every time.
+LANGUAGE_COOKIE_AGE = 365 * 24 * 60 * 60
 
 TIME_ZONE = "UTC"
 

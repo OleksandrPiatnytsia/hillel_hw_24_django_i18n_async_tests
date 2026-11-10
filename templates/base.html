@@ -1,5 +1,8 @@
-{% load static %}<!DOCTYPE html>
-<html lang="en">
+{% load static i18n %}<!DOCTYPE html>
+{# The language of this response (LocaleMiddleware): screen readers, spell #}
+{# checkers and the browser's "Translate this page" rely on lang #}
+{% get_current_language as LANGUAGE_CODE %}
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">

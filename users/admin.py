@@ -17,6 +17,7 @@ class UserAdmin(BaseUserAdmin):
     fieldsets = (
         *BaseUserAdmin.fieldsets,
         ("Delivery details", {"fields": ("phone", "address")}),
+        ("Language", {"fields": ("language",)}),
     )
 
     add_fieldsets = (

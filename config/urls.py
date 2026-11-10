@@ -3,12 +3,15 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
-from config.views import health
+from config.views import health, set_language
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     # 200 / 503: are PostgreSQL and Redis reachable (docker-compose healthcheck)
     path("health/", health, name="health"),
+    # The language switcher (navbar): POST -> cookie + User.language -> back.
+    # The same name as Django's view: {% url 'set_language' %}
+    path("i18n/setlang/", set_language, name="set_language"),
     # Login / logout / sign up: /accounts/login/, ... (namespace "users")
     path("accounts/", include("users.urls")),
     # Session cart: /cart/, /cart/add/<book_id>/, ... (namespace "cart")

@@ -1,3 +1,4 @@
+{% load i18n %}
 {# url_name of the current page, e.g. "list" / "create" — used to highlight the active link #}
 {% with current=request.resolver_match.url_name %}
 {# sticky-top: navbar stays at the top of the window while scrolling #}
@@ -48,6 +49,32 @@
       </form>
 
       <ul class="navbar-nav">
+        {# Language switcher: a POST form (it changes the cookie and the #}
+        {# profile, like logout: not a plain link). Every button sends #}
+        {# language=<code>; config.views.set_language returns to "next". #}
+        {% get_current_language as LANGUAGE_CODE %}
+        {% get_available_languages as LANGUAGES %}
+        {% get_language_info_list for LANGUAGES as languages %}
+        <li class="nav-item dropdown me-lg-2">
+          <a class="nav-link dropdown-toggle" href="#" role="button"
+             data-bs-toggle="dropdown" aria-expanded="false"
+             aria-label="{% translate 'Language' %}">
+            🌐 {{ LANGUAGE_CODE|upper }}
+          </a>
+          <form method="post" action="{% url 'set_language' %}" class="dropdown-menu dropdown-menu-end">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+            {% for language in languages %}
+              {# name_local: every language in its own name (Українська, English) #}
+              <button type="submit" name="language" value="{{ language.code }}"
+                      class="dropdown-item{% if language.code == LANGUAGE_CODE %} active{% endif %}"
+                      {% if language.code == LANGUAGE_CODE %}aria-current="true"{% endif %}
+                      lang="{{ language.code }}">
+                {{ language.name_local|capfirst }}
+              </button>
+            {% endfor %}
+          </form>
+        </li>
         {# Visible for guests too: the cart lives in the session #}
         <li class="nav-item me-lg-2">
           <a class="nav-link {% if current == 'detail' and request.resolver_match.namespace == 'cart' %}active{% endif %}"

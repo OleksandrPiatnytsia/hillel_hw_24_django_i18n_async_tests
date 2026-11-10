@@ -7,7 +7,10 @@ from django.core.cache import cache
 from django.db import connection
 from django.http import JsonResponse
 from django.views.decorators.cache import never_cache
-from django.views.decorators.http import require_GET
+from django.views.decorators.http import require_GET, require_POST
+from django.views.i18n import set_language as django_set_language
+
+from .i18n import is_supported_language
 
 logger = logging.getLogger(__name__)  # "config.views"
 
@@ -72,3 +75,29 @@ def health(request):
         {"status": "ok" if healthy else "error", **results},
         status=200 if healthy else 503,
     )
+
+
+@require_POST
+def set_language(request):
+    """The language switcher in the navbar: POST language=uk|en, next=<page>.
+
+    Django's own set_language view does the main work: checks the language,
+    sets the "django_language" cookie and redirects back to `next` (only to
+    an address of this site). On top of it the choice of a logged-in user
+    is saved in the profile (User.language): the emails come in this
+    language, and the login sets it on another device.
+    """
+    language = request.POST.get("language", "")
+    if not is_supported_language(language):
+        # Django's view checks only that Django itself has translations for
+        # the code (it has "de", "fr", ... for the admin), not
+        # settings.LANGUAGES, and would put "de" into the cookie. Without
+        # "language" in POST it sets no cookie and only redirects back.
+        request.POST = request.POST.copy()  # request.POST itself is read-only
+        request.POST.pop("language", None)
+    response = django_set_language(request)
+    user = request.user
+    if user.is_authenticated and is_supported_language(language) and user.language != language:
+        user.language = language
+        user.save(update_fields=["language"])
+    return response
