@@ -87,13 +87,17 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+# Are we running the tests? `manage.py test`, or pytest (pytest-django
+# imports the settings after pytest itself, so "pytest" is already loaded).
+TESTING = "test" in sys.argv or "pytest" in sys.modules
+
 # Django Debug Toolbar (development only, from requirements-dev.txt).
 # Turned on only when ALL of these are true:
 #   - DEBUG=True: never in production
 #   - the package is installed: requirements.txt alone still works
-#   - not `manage.py test`: the toolbar refuses to run in tests
+#   - not the tests: the toolbar refuses to run in tests
 ENABLE_DEBUG_TOOLBAR = (
-    DEBUG and find_spec("debug_toolbar") is not None and "test" not in sys.argv
+    DEBUG and find_spec("debug_toolbar") is not None and not TESTING
 )
 
 if ENABLE_DEBUG_TOOLBAR:
