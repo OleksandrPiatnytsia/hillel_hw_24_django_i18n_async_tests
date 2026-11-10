@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Bookstore\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-10 13:36+0000\n"
+"POT-Creation-Date: 2026-11-10 13:52+0000\n"
 "PO-Revision-Date: 2026-11-10 16:00+0200\n"
 "Last-Translator: Bookstore\n"
 "Language-Team: English\n"
@@ -113,12 +113,12 @@ msgstr ""
 msgid "Newest first"
 msgstr ""
 
-#: books/forms.py:115 templates/includes/navbar.html:47
-#: templates/includes/navbar.html:48
+#: books/forms.py:115 templates/includes/navbar.html:53
+#: templates/includes/navbar.html:55
 msgid "Search"
 msgstr ""
 
-#: books/forms.py:117 templates/includes/navbar.html:46
+#: books/forms.py:117 templates/includes/navbar.html:52
 msgid "Title or author"
 msgstr ""
 
@@ -439,24 +439,24 @@ msgstr ""
 msgid "Upload a new one to replace it:"
 msgstr ""
 
-#: books/views.py:141
+#: books/views.py:144
 #, python-format
 msgid "Book “%(title)s” was created."
 msgstr ""
 
-#: books/views.py:163
+#: books/views.py:166
 #, python-format
 msgid "Book “%(title)s” was updated."
 msgstr ""
 
-#: books/views.py:206
+#: books/views.py:209
 #, python-format
 msgid "Book “%(title)s” was deleted."
 msgstr ""
 
 #: cart/apps.py:8 cart/templates/cart/cart_detail.html:4
 #: cart/templates/cart/cart_detail.html:7
-#: orders/templates/orders/checkout.html:9 templates/includes/navbar.html:82
+#: orders/templates/orders/checkout.html:9 templates/includes/navbar.html:89
 msgid "Cart"
 msgstr ""
 
@@ -569,11 +569,11 @@ msgstr ""
 msgid "The cart is empty now."
 msgstr ""
 
-#: config/settings.py:238
+#: config/settings.py:252
 msgid "Ukrainian"
 msgstr ""
 
-#: config/settings.py:239
+#: config/settings.py:253
 msgid "English"
 msgstr ""
 
@@ -907,7 +907,7 @@ msgstr ""
 
 #: orders/templates/orders/order_detail.html:9
 #: orders/templates/orders/order_list.html:4
-#: orders/templates/orders/order_list.html:7 templates/includes/navbar.html:99
+#: orders/templates/orders/order_list.html:7 templates/includes/navbar.html:106
 msgid "My orders"
 msgstr ""
 
@@ -956,18 +956,18 @@ msgstr ""
 msgid "You have no orders yet."
 msgstr ""
 
-#: orders/views.py:29
+#: orders/views.py:34
 msgid "Your cart is empty."
 msgstr ""
 
-#: orders/views.py:63
+#: orders/views.py:68
 #, python-format
 msgid ""
 "%(order)s is created, the books are reserved for you. Pay for it with the "
 "“Pay” button."
 msgstr ""
 
-#: orders/views.py:134
+#: orders/views.py:139
 #, python-format
 msgid "%(order)s is cancelled. The books are back in stock."
 msgstr ""
@@ -1181,23 +1181,31 @@ msgstr ""
 msgid "The order is fully paid."
 msgstr ""
 
-#: payments/templates/payments/payment_success.html:18
+#: payments/templates/payments/payment_success.html:23
 msgid "The payment is being confirmed"
 msgstr ""
 
-#: payments/templates/payments/payment_success.html:20
+#: payments/templates/payments/payment_success.html:25
 msgid "It usually takes a few seconds. The order page will show the result."
 msgstr ""
 
-#: payments/templates/payments/payment_success.html:24
+#: payments/templates/payments/payment_success.html:28
+msgid "Checking…"
+msgstr ""
+
+#: payments/templates/payments/payment_success.html:31
+msgid "Still not confirmed. Open the order page later to see the result."
+msgstr ""
+
+#: payments/templates/payments/payment_success.html:36
 msgid "The payment didn't go through"
 msgstr ""
 
-#: payments/templates/payments/payment_success.html:25
+#: payments/templates/payments/payment_success.html:37
 msgid "You can try again from the order page."
 msgstr ""
 
-#: payments/templates/payments/payment_success.html:27
+#: payments/templates/payments/payment_success.html:39
 #, python-format
 msgid "Open %(order)s"
 msgstr ""
@@ -1245,26 +1253,30 @@ msgstr ""
 msgid "Admin"
 msgstr ""
 
-#: templates/includes/navbar.html:61 users/admin.py:21
+#: templates/includes/navbar.html:49
+msgid "No books found"
+msgstr ""
+
+#: templates/includes/navbar.html:68 users/admin.py:21
 #: users/templates/users/profile.html:41
 msgid "Language"
 msgstr ""
 
-#: templates/includes/navbar.html:98 users/templates/users/profile.html:4
+#: templates/includes/navbar.html:105 users/templates/users/profile.html:4
 #: users/templates/users/profile_edit.html:11
 msgid "My profile"
 msgstr ""
 
-#: templates/includes/navbar.html:106
+#: templates/includes/navbar.html:113
 msgid "Log out"
 msgstr ""
 
-#: templates/includes/navbar.html:115 users/templates/users/auth_form.html:54
+#: templates/includes/navbar.html:122 users/templates/users/auth_form.html:54
 #: users/views.py:40
 msgid "Log in"
 msgstr ""
 
-#: templates/includes/navbar.html:119 users/templates/users/auth_form.html:52
+#: templates/includes/navbar.html:126 users/templates/users/auth_form.html:52
 #: users/views.py:72
 msgid "Sign up"
 msgstr ""

@@ -51,3 +51,11 @@ for logger_config in LOGGING["loggers"].values():
     logger_config["handlers"] = [
         handler for handler in logger_config["handlers"] if handler != "file"
     ]
+
+# No connection pool in tests: the pool keeps its connections to
+# test_bookstore open until the process ends, and pytest-django can't drop
+# the test database at the end ("is being accessed by other users").
+# Without "pool" Django opens a connection per thread and closes it.
+from .settings import DATABASES  # noqa: E402
+
+DATABASES["default"]["OPTIONS"].pop("pool", None)

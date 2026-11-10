@@ -20,7 +20,9 @@ Fixtures from pytest-django used here and in the tests:
 import smtplib
 
 import pytest
+from asgiref.sync import sync_to_async
 from django.core.cache import cache
+from django.db import connections
 from django.core.mail import EmailMessage
 from django.test import Client
 
@@ -50,6 +52,21 @@ def _isolated_environment(settings, tmp_path):
 # database: they are created by the data migration users.0003_create_groups
 # (and orders.0002 adds the order permissions to Managers).
 # ---------------------------------------------------------------------------
+
+
+@pytest.fixture
+async def async_db_connections():
+    """For async tests: close the database connection of the sync_to_async thread.
+
+    The async ORM and `await sync_to_async(Factory)(...)` run the queries in
+    one shared worker thread that lives until pytest ends. Its connection
+    would stay open, and at the very end pytest-django couldn't drop
+    test_bookstore ("is being accessed by other users"). Closed after every
+    test, in that same thread (a connection belongs to its thread).
+    Used with pytest.mark.usefixtures in the async test modules.
+    """
+    yield
+    await sync_to_async(connections.close_all)()
 
 
 @pytest.fixture

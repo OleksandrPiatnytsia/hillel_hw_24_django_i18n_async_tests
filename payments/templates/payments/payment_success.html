@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n static %}
 
 {% block title %}{% translate "Payment" %}{% endblock %}
 
@@ -14,11 +14,23 @@
     </p>
   {% elif payment.status == "pending" %}
     {# Stripe hasn't confirmed yet (slow bank, network): the webhook will #}
-    <div class="display-1">⏳</div>
-    <h1 class="h3 mt-3">{% translate "The payment is being confirmed" %}</h1>
-    <p class="text-body-secondary">
-      {% translate "It usually takes a few seconds. The order page will show the result." %}
-    </p>
+    {# static/js/payment_status.js polls the async view orders:status and #}
+    {# opens the order page as soon as payment_status changes #}
+    <div data-order-status-url="{% url 'orders:status' order.pk %}"
+         data-order-url="{{ order.get_absolute_url }}"
+         data-payment-status="{{ order.payment_status }}">
+      <div class="display-1">⏳</div>
+      <h1 class="h3 mt-3">{% translate "The payment is being confirmed" %}</h1>
+      <p class="text-body-secondary">
+        {% translate "It usually takes a few seconds. The order page will show the result." %}
+      </p>
+      <div class="spinner-border text-primary mb-3" role="status">
+        <span class="visually-hidden">{% translate "Checking…" %}</span>
+      </div>
+      <p class="text-body-secondary d-none" data-status-timeout>
+        {% translate "Still not confirmed. Open the order page later to see the result." %}
+      </p>
+    </div>
   {% else %}
     <div class="display-1">⚠️</div>
     <h1 class="h3 mt-3">{% translate "The payment didn't go through" %}</h1>
@@ -26,4 +38,10 @@
   {% endif %}
   <a class="btn btn-primary" href="{{ order.get_absolute_url }}">{% blocktranslate %}Open {{ order }}{% endblocktranslate %}</a>
 </div>
+{% endblock %}
+
+{% block scripts %}
+  {% if payment.status == "pending" %}
+    <script src="{% static 'js/payment_status.js' %}" defer></script>
+  {% endif %}
 {% endblock %}

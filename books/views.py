@@ -3,8 +3,11 @@ import logging
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Count, Q
+from django.http import JsonResponse
 from django.urls import reverse_lazy
+from django.utils.formats import number_format
 from django.utils.translation import gettext
+from django.views.decorators.http import require_GET
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import (
     CreateView,
@@ -234,3 +237,44 @@ class AuthorDetailView(DetailView):
         # Reverse side of ForeignKey: related_name="books" -> author.books
         context["books"] = self.object.books.prefetch_related("categories")
         return context
+
+
+# ---------------------------------------------------------------------------
+# Search suggestions for the navbar (async)
+# ---------------------------------------------------------------------------
+
+SEARCH_MIN_LENGTH = 2  # fewer letters match half the catalog
+SEARCH_LIMIT = 8  # suggestions in the dropdown
+
+
+@require_GET
+async def book_search(request):
+    """GET /search/?q=kob -> JSON: up to 8 books whose title or author matches.
+
+    Used by the search field in the navbar (static/js/book_search.js) while
+    the user types; Enter still opens the full catalog search (?q=...).
+
+    Async view, async ORM: `async for` over the queryset sends the query
+    without blocking the event loop (the same Q filter as BookListView).
+    """
+    query = request.GET.get("q", "").strip()
+    if len(query) < SEARCH_MIN_LENGTH:
+        return JsonResponse({"results": []})
+
+    books = (
+        Book.objects.select_related("author")  # author.name in the same query
+        .filter(Q(title__icontains=query) | Q(author__name__icontains=query))
+        .order_by("title", "pk")[:SEARCH_LIMIT]
+    )
+    results = [
+        {
+            "title": book.title,
+            "author": book.author.name,
+            "url": book.get_absolute_url(),
+            # "250,00" / "250.00": in the language of the request
+            "price": number_format(book.price, 2),
+            "in_stock": book.stock > 0,
+        }
+        async for book in books
+    ]
+    return JsonResponse({"results": results})

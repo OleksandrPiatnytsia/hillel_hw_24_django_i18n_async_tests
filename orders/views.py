@@ -1,10 +1,15 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from decimal import Decimal
+
 from django.db.models import Sum
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils.formats import number_format
 from django.utils.translation import gettext as _
-from django.views.decorators.http import require_POST
+from django.views.decorators.cache import never_cache
+from django.views.decorators.http import require_GET, require_POST
 from django.views.generic import ListView
 
 from books.views import ElidedPaginationMixin
@@ -134,3 +139,57 @@ def order_cancel(request, pk):
             request, _("%(order)s is cancelled. The books are back in stock.") % {"order": order}
         )
     return redirect("orders:detail", pk=pk)
+
+
+@never_cache  # a fresh answer for every poll, never from a browser cache
+@require_GET
+async def order_status(request, pk):
+    """GET /orders/<pk>/status/ -> JSON with the current statuses of the order.
+
+    Polled every few seconds by the "The payment is being confirmed" page
+    (payments/payment_success.html + static/js/payment_status.js): when the
+    Stripe webhook marks the payment, the page goes to the order by itself.
+
+    Async view with async database queries:
+    - await request.auser(): the user (request.user would make a sync query);
+    - .afirst(): the order, only the needed columns (values());
+    - .aaggregate(): SUM of the succeeded payments in SQL.
+    JSON answers for errors (401 / 404), not redirects or HTML pages: the
+    caller is JavaScript, not a person.
+    """
+    # Imported here: payments.models imports orders.models (see Order.paid_amount)
+    from payments.models import Payment
+
+    user = await request.auser()
+    if not user.is_authenticated:
+        return JsonResponse({"error": "login required"}, status=401)
+
+    # user=user: someone else's order looks the same as a missing one
+    order = await (
+        Order.objects.filter(pk=pk, user=user)
+        .values("pk", "status", "payment_status", "total")
+        .afirst()
+    )
+    if order is None:
+        return JsonResponse({"error": "not found"}, status=404)
+
+    paid = await Payment.objects.filter(
+        order_id=pk, status=Payment.Status.SUCCEEDED
+    ).aaggregate(total=Sum("amount"))
+    paid_amount = paid["total"] or Decimal("0.00")
+    amount_due = max(order["total"] - paid_amount, Decimal("0.00"))
+
+    return JsonResponse(
+        {
+            "id": order["pk"],
+            "status": order["status"],
+            # The labels in the language of the request ("Оплачено" / "Paid")
+            "status_display": str(Order.Status(order["status"]).label),
+            "payment_status": order["payment_status"],
+            "payment_status_display": str(Order.PaymentStatus(order["payment_status"]).label),
+            # Strings formatted for the language ("250,00" / "250.00"):
+            # only for showing; the codes above are for the logic
+            "paid_amount": number_format(paid_amount, 2),
+            "amount_due": number_format(amount_due, 2),
+        }
+    )

@@ -229,7 +229,7 @@ def test_health_ok(client):
 
 
 def test_health_reports_broken_cache_with_503(client, monkeypatch):
-    def broken_cache():
+    async def broken_cache():  # the checks are async functions now
         raise ConnectionError("Redis is down (test)")
 
     # CHECKS is a dict: replace one entry for this test only

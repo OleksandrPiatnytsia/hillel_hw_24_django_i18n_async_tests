@@ -71,9 +71,16 @@ ENTRYPOINT ["/app/docker-entrypoint.sh"]
 # is opened by "ports:" in docker-compose.yml.
 EXPOSE 8000
 
-# Default command: gunicorn, a production WSGI server (runserver is for
-# development only: one process, not built for load or security).
-#   config.wsgi:application - the `application` object from config/wsgi.py
+# Default command: gunicorn as the process manager + uvicorn workers, i.e.
+# an ASGI server (runserver is for development only: one process, not built
+# for load or security). ASGI: the async views (health, order status, book
+# search) run in an event loop; the sync views keep working as before
+# (Django runs them in a thread).
+#   config.asgi:application - the `application` object from config/asgi.py
+#   -k uvicorn_worker.UvicornWorker
+#                           - every gunicorn worker process runs uvicorn
+#                             (package uvicorn-worker): gunicorn restarts
+#                             crashed workers, uvicorn speaks ASGI
 #   --bind 0.0.0.0:8000     - listen on all interfaces of the container;
 #                             127.0.0.1 would be reachable only from inside it
 #   --workers 3             - 3 processes handle requests in parallel
@@ -90,4 +97,4 @@ EXPOSE 8000
 # The exec form ["...", "..."] (not a string): gunicorn becomes process
 # PID 1 itself and receives SIGTERM from `docker compose stop` directly,
 # so it finishes current requests and exits cleanly.
-CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3", "--no-control-socket"]
+CMD ["gunicorn", "config.asgi:application", "-k", "uvicorn_worker.UvicornWorker", "--bind", "0.0.0.0:8000", "--workers", "3", "--no-control-socket"]

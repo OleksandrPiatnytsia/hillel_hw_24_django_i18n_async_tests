@@ -79,7 +79,8 @@ MIDDLEWARE = [
     # gunicorn, without nginx. Right after SecurityMiddleware (WhiteNoise
     # docs): static responses still get the security headers, but skip
     # sessions, auth, CSRF and the rest below.
-    "whitenoise.middleware.WhiteNoiseMiddleware",
+    # (our subclass: WhiteNoise itself is sync only, see config/middleware.py)
+    "config.middleware.AsyncWhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     # Chooses the language of every request (see "Internationalization"
     # below) and activates it for the view and the templates. After
@@ -137,7 +138,10 @@ TEMPLATES = [
     },
 ]
 
+# runserver and `manage.py` use WSGI; Docker runs the ASGI application
+# (config/asgi.py) with gunicorn + uvicorn workers: see the Dockerfile
 WSGI_APPLICATION = "config.wsgi.application"
+ASGI_APPLICATION = "config.asgi.application"
 
 
 # Database
@@ -165,12 +169,22 @@ DATABASES = {
         "PASSWORD": os.environ["POSTGRES_PASSWORD"],
         "HOST": os.getenv("POSTGRES_HOST", "localhost"),
         "PORT": os.getenv("POSTGRES_PORT", "5432"),
-        # Keep a connection open for 60 seconds and reuse it for the next
-        # requests, instead of a new connection for every request
-        "CONN_MAX_AGE": 60,
-        # Before reusing a kept connection, check that it is still alive
-        # (e.g. after the db container restarted)
-        "CONN_HEALTH_CHECKS": True,
+        # A POOL of open connections (psycopg_pool) instead of persistent
+        # connections (CONN_MAX_AGE). Under ASGI (gunicorn + uvicorn) the
+        # async views run the ORM in worker threads, and a persistent
+        # connection is kept per thread: threads come and go, their
+        # connections stay open (Django docs: "disable persistent
+        # connections" under ASGI). A pool shares a few connections between
+        # all threads of a process: a request takes one, gives it back at
+        # the end. CONN_MAX_AGE must stay 0 with a pool (Django checks it).
+        "CONN_MAX_AGE": 0,
+        "OPTIONS": {
+            "pool": {
+                "min_size": 2,  # opened at start, always ready
+                "max_size": 10,  # at most, per gunicorn worker process
+                "timeout": 10,  # seconds to wait for a free connection
+            },
+        },
     }
 }
 
