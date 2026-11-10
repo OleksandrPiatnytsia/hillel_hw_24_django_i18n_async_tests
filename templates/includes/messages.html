@@ -1,9 +1,10 @@
+{% load i18n %}
 {# Flash messages from django.contrib.messages (SuccessMessageMixin in views) #}
 {% for message in messages %}
   {# Django's "error" tag is called "danger" in Bootstrap #}
   <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show"
        role="alert">
     {{ message }}
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{% translate 'Close' %}"></button>
   </div>
 {% endfor %}

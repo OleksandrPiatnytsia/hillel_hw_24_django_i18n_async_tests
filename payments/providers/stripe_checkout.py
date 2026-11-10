@@ -16,6 +16,7 @@ import stripe
 from django.conf import settings
 from django.http import HttpResponse
 from django.urls import reverse
+from django.utils.translation import get_language
 from django.utils.translation import gettext as _
 
 from .base import PaymentProvider, PaymentProviderError, ProviderSession
@@ -29,6 +30,16 @@ SESSION_LIFETIME_SECONDS = 31 * 60
 
 # UAH has two decimal places: Stripe wants the amount in kopiyky, 250.50 -> 25050
 CURRENCY = "uah"
+
+# Language of the Stripe page: our language code -> Stripe's "locale".
+# Stripe has no Ukrainian (its list: the "locale" parameter of
+# checkout.sessions.create in the stripe package), so "uk" -> "auto":
+# Stripe takes the language of the customer's browser.
+STRIPE_LOCALES = {"en": "en"}
+
+
+def stripe_locale(language):
+    return STRIPE_LOCALES.get(language, "auto")
 
 
 def to_minor_units(amount):
@@ -76,6 +87,8 @@ class StripeProvider(PaymentProvider):
                     ],
                     # Prefilled on the Stripe page; Stripe sends its receipt there
                     "customer_email": order.user.email,
+                    # The language of the site at the moment of "Pay"
+                    "locale": stripe_locale(get_language()),
                     # Our ids, sent back in the webhook (stage 7) and shown
                     # in the Stripe Dashboard
                     "client_reference_id": str(order.pk),

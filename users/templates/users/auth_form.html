@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% comment %}
 Shared by UserLoginView and SignUpView.
@@ -48,9 +49,9 @@ Shared by UserLoginView and SignUpView.
         <hr>
         <p class="text-center small mb-0">
           {% if request.resolver_match.url_name == "login" %}
-            No account yet? <a href="{% url 'users:signup' %}{% if next %}?next={{ next|urlencode }}{% endif %}">Sign up</a>
+            {% translate "No account yet?" %} <a href="{% url 'users:signup' %}{% if next %}?next={{ next|urlencode }}{% endif %}">{% translate "Sign up" %}</a>
           {% else %}
-            Already have an account? <a href="{% url 'users:login' %}{% if next %}?next={{ next|urlencode }}{% endif %}">Log in</a>
+            {% translate "Already have an account?" %} <a href="{% url 'users:login' %}{% if next %}?next={{ next|urlencode }}{% endif %}">{% translate "Log in" %}</a>
           {% endif %}
         </p>
       </div>

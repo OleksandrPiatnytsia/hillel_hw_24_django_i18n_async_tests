@@ -1,13 +1,14 @@
 {% extends "base.html" %}
+{% load i18n %}
 
-{% block title %}Catalog{% endblock %}
+{% block title %}{% translate "Catalog" %}{% endblock %}
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
-  <h1 class="h3 mb-0">Catalog</h1>
+  <h1 class="h3 mb-0">{% translate "Catalog" %}</h1>
   {# perms comes from the auth context processor; same as user.has_perm("books.add_book") #}
   {% if perms.books.add_book %}
-    <a class="btn btn-primary" href="{% url 'books:create' %}">+ Add book</a>
+    <a class="btn btn-primary" href="{% url 'books:create' %}">+ {% translate "Add book" %}</a>
   {% endif %}
 </div>
 
@@ -16,7 +17,7 @@
   {# ---------- Filters (sidebar) ---------- #}
   <aside class="col-lg-3">
     <div class="card shadow-sm filters-sidebar">
-      <div class="card-header fw-semibold">Filters</div>
+      <div class="card-header fw-semibold">{% translate "Filters" %}</div>
       <div class="card-body">
         {# GET, not POST: filters are part of the URL, so the page can be bookmarked/shared #}
         <form method="get" action="{% url 'books:list' %}">
@@ -40,9 +41,9 @@
           {% endfor %}
 
           <div class="d-grid gap-2">
-            <button class="btn btn-primary" type="submit">Apply</button>
+            <button class="btn btn-primary" type="submit">{% translate "Apply" %}</button>
             {# Link without GET params = all filters reset #}
-            <a class="btn btn-outline-secondary" href="{% url 'books:list' %}">Reset</a>
+            <a class="btn btn-outline-secondary" href="{% url 'books:list' %}">{% translate "Reset" %}</a>
           </div>
         </form>
       </div>
@@ -52,8 +53,18 @@
   {# ---------- Results ---------- #}
   <section class="col-lg-9">
     <p class="text-body-secondary small mb-3">
-      Found: {{ paginator.count }} book{{ paginator.count|pluralize }}
-      {% if is_paginated %}· page {{ page_obj.number }} of {{ paginator.num_pages }}{% endif %}
+      {# |pluralize knows only English ("book" / "books"); blocktranslate count #}
+      {# picks one of the Ukrainian forms: 1 книга, 2 книги, 5 книг #}
+      {% blocktranslate trimmed count count=paginator.count %}
+        Found: {{ count }} book
+      {% plural %}
+        Found: {{ count }} books
+      {% endblocktranslate %}
+      {% if is_paginated %}
+        {% blocktranslate trimmed with number=page_obj.number pages=paginator.num_pages %}
+          · page {{ number }} of {{ pages }}
+        {% endblocktranslate %}
+      {% endif %}
     </p>
 
     <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3">
@@ -97,7 +108,7 @@
                 {# the "Out of stock" badge already explains why. disabled: the #}
                 {# form can't be sent anyway (Cart.add() would refuse it too). #}
                 <button class="btn btn-sm btn-outline-primary {% if not book.stock %}invisible{% endif %}"
-                        type="submit" {% if not book.stock %}disabled{% endif %}>Add to cart</button>
+                        type="submit" {% if not book.stock %}disabled{% endif %}>{% translate "Add to cart" %}</button>
               </form>
             </div>
           </article>
@@ -105,8 +116,8 @@
       {% empty %}
         <div class="col-12">
           <div class="alert alert-info mb-0">
-            No books match these filters.
-            <a href="{% url 'books:list' %}" class="alert-link">Show all books</a>
+            {% translate "No books match these filters." %}
+            <a href="{% url 'books:list' %}" class="alert-link">{% translate "Show all books" %}</a>
           </div>
         </div>
       {% endfor %}

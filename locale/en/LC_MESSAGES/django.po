@@ -1,0 +1,1422 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Bookstore\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-10 13:36+0000\n"
+"PO-Revision-Date: 2026-11-10 16:00+0200\n"
+"Last-Translator: Bookstore\n"
+"Language-Team: English\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: books/admin.py:28 books/models.py:43 books/models.py:140
+msgid "category"
+msgstr ""
+
+#: books/admin.py:29 books/admin.py:155 books/models.py:44 books/models.py:87
+msgid "categories"
+msgstr ""
+
+#: books/admin.py:37 books/models.py:99 books/models.py:139
+#: orders/models.py:189
+msgid "book"
+msgstr ""
+
+#: books/admin.py:38 books/admin.py:74 books/admin.py:90 books/models.py:100
+msgid "books"
+msgstr ""
+
+#: books/admin.py:47
+msgid "stock status"
+msgstr ""
+
+#: books/admin.py:119
+msgid "Cover"
+msgstr ""
+
+#: books/admin.py:120
+msgid "Sales"
+msgstr ""
+
+#: books/admin.py:122 orders/admin.py:104
+msgid "Timestamps"
+msgstr ""
+
+#: books/admin.py:147 books/models.py:84
+msgid "cover"
+msgstr ""
+
+#: books/admin.py:151
+msgid "current cover"
+msgstr ""
+
+#: books/admin.py:159
+msgid "available"
+msgstr ""
+
+#: books/apps.py:8 orders/templates/orders/order_list.html:17
+msgid "Books"
+msgstr ""
+
+#: books/forms.py:38
+msgid "New authors are added in the admin."
+msgstr ""
+
+#: books/forms.py:41
+#, python-brace-format
+msgid ""
+"JPG, PNG or WebP, up to {size} MB. Without a cover a placeholder is shown."
+msgstr ""
+
+#: books/forms.py:74
+msgid "— Choose an author —"
+msgstr ""
+
+#: books/forms.py:82
+msgid "Only users with the “manage stock” permission can change it."
+msgstr ""
+
+#: books/forms.py:95
+#, python-format
+msgid "The file is %(size).1f MB, the limit is %(limit)s MB."
+msgstr ""
+
+#: books/forms.py:105
+msgid "Title A→Z"
+msgstr ""
+
+#: books/forms.py:106
+msgid "Title Z→A"
+msgstr ""
+
+#: books/forms.py:107
+msgid "Author A→Z"
+msgstr ""
+
+#: books/forms.py:108
+msgid "Price: low to high"
+msgstr ""
+
+#: books/forms.py:109
+msgid "Price: high to low"
+msgstr ""
+
+#: books/forms.py:110
+msgid "Newest first"
+msgstr ""
+
+#: books/forms.py:115 templates/includes/navbar.html:47
+#: templates/includes/navbar.html:48
+msgid "Search"
+msgstr ""
+
+#: books/forms.py:117 templates/includes/navbar.html:46
+msgid "Title or author"
+msgstr ""
+
+#: books/forms.py:124
+msgid "Category"
+msgstr ""
+
+#: books/forms.py:125
+msgid "All categories"
+msgstr ""
+
+#: books/forms.py:131
+msgid "Author"
+msgstr ""
+
+#: books/forms.py:132
+msgid "All authors"
+msgstr ""
+
+#: books/forms.py:136
+msgid "Any"
+msgstr ""
+
+#: books/forms.py:138
+msgid "Availability"
+msgstr ""
+
+#: books/forms.py:144
+msgid "Price from"
+msgstr ""
+
+#: books/forms.py:150
+msgid "Price to"
+msgstr ""
+
+#: books/forms.py:156
+msgid "Sort by"
+msgstr ""
+
+#: books/forms.py:165
+msgid "“Price from” can't be greater than “Price to”."
+msgstr ""
+
+#: books/models.py:18
+msgid "In stock"
+msgstr ""
+
+#: books/models.py:22
+#, python-brace-format
+msgid "Low (≤ {threshold})"
+msgstr ""
+
+#: books/models.py:23 books/templates/books/includes/stock_badge.html:4
+msgid "Out of stock"
+msgstr ""
+
+#: books/models.py:38 books/models.py:52
+msgid "name"
+msgstr ""
+
+#: books/models.py:39
+msgid "slug"
+msgstr ""
+
+#: books/models.py:53
+msgid "biography"
+msgstr ""
+
+#: books/models.py:57 books/models.py:71
+msgid "author"
+msgstr ""
+
+#: books/models.py:58
+msgid "authors"
+msgstr ""
+
+#: books/models.py:68 orders/models.py:198
+msgid "title"
+msgstr ""
+
+#: books/models.py:76 orders/models.py:200
+msgid "price"
+msgstr ""
+
+#: books/models.py:81
+msgid "description"
+msgstr ""
+
+#: books/models.py:82
+msgid "stock"
+msgstr ""
+
+#: books/models.py:92 orders/models.py:78 payments/models.py:63
+msgid "created at"
+msgstr ""
+
+#: books/models.py:93 orders/models.py:79 payments/models.py:64
+msgid "updated at"
+msgstr ""
+
+#: books/models.py:143
+msgid "book category"
+msgstr ""
+
+#: books/models.py:144
+msgid "book categories"
+msgstr ""
+
+#: books/templates/books/author_detail.html:7
+#: books/templates/books/book_detail.html:7
+#: books/templates/books/book_form.html:13
+#: orders/templates/orders/checkout.html:7
+#: orders/templates/orders/order_detail.html:7
+#: users/templates/users/profile_edit.html:9
+msgid "Breadcrumb"
+msgstr ""
+
+#: books/templates/books/author_detail.html:9
+#: books/templates/books/author_list.html:4
+#: books/templates/books/author_list.html:8 templates/includes/navbar.html:26
+msgid "Authors"
+msgstr ""
+
+#: books/templates/books/author_detail.html:20
+msgid "Edit in admin"
+msgstr ""
+
+#: books/templates/books/author_detail.html:26
+msgid "No biography yet."
+msgstr ""
+
+#: books/templates/books/author_detail.html:32
+#, python-format
+msgid "Books (%(count)s)"
+msgstr ""
+
+#: books/templates/books/author_detail.html:35
+msgid "Open in catalog"
+msgstr ""
+
+#: books/templates/books/author_detail.html:59
+msgid "This author has no books yet."
+msgstr ""
+
+#: books/templates/books/author_list.html:11
+msgid "Add author (admin)"
+msgstr ""
+
+#: books/templates/books/author_list.html:23
+#, python-format
+msgid "%(count)s book"
+msgid_plural "%(count)s books"
+msgstr[0] ""
+msgstr[1] ""
+
+#: books/templates/books/author_list.html:31
+msgid "No authors yet."
+msgstr ""
+
+#: books/templates/books/book_confirm_delete.html:4
+#, python-format
+msgid "Delete “%(title)s”"
+msgstr ""
+
+#: books/templates/books/book_confirm_delete.html:10
+msgid "Delete book"
+msgstr ""
+
+#: books/templates/books/book_confirm_delete.html:12
+msgid "Are you sure you want to delete this book?"
+msgstr ""
+
+#: books/templates/books/book_confirm_delete.html:16
+msgid "Its category links will be removed too. Categories themselves stay."
+msgstr ""
+
+#: books/templates/books/book_confirm_delete.html:23
+msgid "Yes, delete"
+msgstr ""
+
+#: books/templates/books/book_confirm_delete.html:24
+#: books/templates/books/book_form.html:80
+#: users/templates/users/profile_edit.html:35
+msgid "Cancel"
+msgstr ""
+
+#: books/templates/books/book_detail.html:9
+#: books/templates/books/book_form.html:15
+#: books/templates/books/book_list.html:4
+#: books/templates/books/book_list.html:8 templates/includes/navbar.html:20
+msgid "Catalog"
+msgstr ""
+
+#: books/templates/books/book_detail.html:18
+#, python-format
+msgid "Cover of %(title)s"
+msgstr ""
+
+#: books/templates/books/book_detail.html:39
+#: cart/templates/cart/cart_detail.html:18
+#: orders/templates/orders/order_detail.html:32
+msgid "Quantity"
+msgstr ""
+
+#: books/templates/books/book_detail.html:40
+#: books/templates/books/book_list.html:111
+msgid "Add to cart"
+msgstr ""
+
+#: books/templates/books/book_detail.html:46
+#, python-format
+msgid "In your <a href=\"%(cart_url)s\">cart</a>: %(in_cart)s"
+msgstr ""
+
+#: books/templates/books/book_detail.html:60
+msgid "No description yet."
+msgstr ""
+
+#: books/templates/books/book_detail.html:65
+#, python-format
+msgid "Added %(added)s · updated %(updated)s"
+msgstr ""
+
+#: books/templates/books/book_detail.html:72 templates/403.html:27
+#: templates/404.html:20
+msgid "Back to catalog"
+msgstr ""
+
+#: books/templates/books/book_detail.html:76
+#: books/templates/books/book_form.html:18
+#: users/templates/users/profile.html:49
+#: users/templates/users/profile_edit.html:12
+msgid "Edit"
+msgstr ""
+
+#: books/templates/books/book_detail.html:79
+msgid "Delete"
+msgstr ""
+
+#: books/templates/books/book_form.html:10
+#, python-format
+msgid "Edit “%(title)s”"
+msgstr ""
+
+#: books/templates/books/book_form.html:10
+#: books/templates/books/book_form.html:20
+#: books/templates/books/book_form.html:29
+#: books/templates/books/book_list.html:11 templates/includes/navbar.html:32
+msgid "Add book"
+msgstr ""
+
+#: books/templates/books/book_form.html:29
+msgid "Edit book"
+msgstr ""
+
+#: books/templates/books/book_form.html:76
+msgid "Save changes"
+msgstr ""
+
+#: books/templates/books/book_form.html:76
+msgid "Create book"
+msgstr ""
+
+#: books/templates/books/book_list.html:20
+msgid "Filters"
+msgstr ""
+
+#: books/templates/books/book_list.html:44
+msgid "Apply"
+msgstr ""
+
+#: books/templates/books/book_list.html:46
+msgid "Reset"
+msgstr ""
+
+#: books/templates/books/book_list.html:58
+#, python-format
+msgid "Found: %(count)s book"
+msgid_plural "Found: %(count)s books"
+msgstr[0] ""
+msgstr[1] ""
+
+#: books/templates/books/book_list.html:64
+#, python-format
+msgid "· page %(number)s of %(pages)s"
+msgstr ""
+
+#: books/templates/books/book_list.html:119
+msgid "No books match these filters."
+msgstr ""
+
+#: books/templates/books/book_list.html:120
+msgid "Show all books"
+msgstr ""
+
+#: books/templates/books/includes/stock_badge.html:7
+#, python-format
+msgid "Only %(stock)s copy left"
+msgid_plural "Only %(stock)s copies left"
+msgstr[0] ""
+msgstr[1] ""
+
+#: books/templates/books/includes/stock_badge.html:13
+#, python-format
+msgid "In stock: %(stock)s"
+msgstr ""
+
+#: books/templates/books/widgets/cover_input.html:13
+#: books/templates/books/widgets/cover_input.html:16
+msgid "Current cover"
+msgstr ""
+
+#: books/templates/books/widgets/cover_input.html:23
+msgid "Remove cover"
+msgstr ""
+
+#: books/templates/books/widgets/cover_input.html:28
+msgid "Upload a new one to replace it:"
+msgstr ""
+
+#: books/views.py:141
+#, python-format
+msgid "Book “%(title)s” was created."
+msgstr ""
+
+#: books/views.py:163
+#, python-format
+msgid "Book “%(title)s” was updated."
+msgstr ""
+
+#: books/views.py:206
+#, python-format
+msgid "Book “%(title)s” was deleted."
+msgstr ""
+
+#: cart/apps.py:8 cart/templates/cart/cart_detail.html:4
+#: cart/templates/cart/cart_detail.html:7
+#: orders/templates/orders/checkout.html:9 templates/includes/navbar.html:82
+msgid "Cart"
+msgstr ""
+
+#: cart/templates/cart/cart_detail.html:16
+#: orders/templates/orders/emails/order_created.html:30
+#: orders/templates/orders/order_detail.html:30
+msgid "Book"
+msgstr ""
+
+#: cart/templates/cart/cart_detail.html:17
+#: orders/templates/orders/emails/order_created.html:31
+#: orders/templates/orders/order_detail.html:31
+msgid "Price"
+msgstr ""
+
+#: cart/templates/cart/cart_detail.html:19
+#: orders/templates/orders/emails/order_created.html:33
+#: orders/templates/orders/order_detail.html:33
+msgid "Cost"
+msgstr ""
+
+#: cart/templates/cart/cart_detail.html:20
+msgid "Remove"
+msgstr ""
+
+#: cart/templates/cart/cart_detail.html:37
+#: orders/templates/orders/checkout.html:82
+#, python-format
+msgid "Only %(stock)s copy left in stock"
+msgid_plural "Only %(stock)s copies left in stock"
+msgstr[0] ""
+msgstr[1] ""
+
+#: cart/templates/cart/cart_detail.html:41
+#: orders/templates/orders/checkout.html:86
+msgid "Out of stock now"
+msgstr ""
+
+#: cart/templates/cart/cart_detail.html:54
+#, python-format
+msgid "Quantity of %(title)s"
+msgstr ""
+
+#: cart/templates/cart/cart_detail.html:55
+msgid "Update"
+msgstr ""
+
+#: cart/templates/cart/cart_detail.html:63
+#, python-format
+msgid "Remove %(title)s"
+msgstr ""
+
+#: cart/templates/cart/cart_detail.html:72
+#: orders/templates/orders/checkout.html:94
+#: orders/templates/orders/emails/order_created.html:44
+#: orders/templates/orders/order_detail.html:50
+#: orders/templates/orders/order_list.html:18
+msgid "Total"
+msgstr ""
+
+#: cart/templates/cart/cart_detail.html:82
+msgid "Continue shopping"
+msgstr ""
+
+#: cart/templates/cart/cart_detail.html:85
+msgid "Clear cart"
+msgstr ""
+
+#: cart/templates/cart/cart_detail.html:89
+#: orders/templates/orders/checkout.html:4
+#: orders/templates/orders/checkout.html:10
+#: orders/templates/orders/checkout.html:14
+msgid "Checkout"
+msgstr ""
+
+#: cart/templates/cart/cart_detail.html:94 orders/services.py:50
+msgid "The cart is empty."
+msgstr ""
+
+#: cart/templates/cart/cart_detail.html:95
+#: orders/templates/orders/order_list.html:45
+msgid "Go to the catalog"
+msgstr ""
+
+#: cart/views.py:44
+msgid "Quantity must be a whole number, 1 or more."
+msgstr ""
+
+#: cart/views.py:54 orders/services.py:80
+#, python-format
+msgid "“%(title)s” is out of stock."
+msgstr ""
+
+#: cart/views.py:59
+#, python-format
+msgid "“%(title)s”: %(quantity)s in the cart, that's all we have in stock."
+msgstr ""
+
+#: cart/views.py:65
+#, python-format
+msgid "“%(title)s”: %(quantity)s in the cart."
+msgstr ""
+
+#: cart/views.py:74
+#, python-format
+msgid "“%(title)s” removed from the cart."
+msgstr ""
+
+#: cart/views.py:81
+msgid "The cart is empty now."
+msgstr ""
+
+#: config/settings.py:238
+msgid "Ukrainian"
+msgstr ""
+
+#: config/settings.py:239
+msgid "English"
+msgstr ""
+
+#: orders/admin.py:47
+msgid "cost"
+msgstr ""
+
+#: orders/admin.py:92 payments/templates/payments/payment_success.html:4
+msgid "Payment"
+msgstr ""
+
+#: orders/admin.py:103 orders/templates/orders/checkout.html:22
+#: orders/templates/orders/emails/order_created.html:49
+#: orders/templates/orders/order_detail.html:62
+msgid "Delivery"
+msgstr ""
+
+#: orders/admin.py:150
+msgid "paid"
+msgstr ""
+
+#: orders/admin.py:156
+msgid "paid amount"
+msgstr ""
+
+#: orders/admin.py:158 orders/admin.py:162
+#, python-format
+msgid "%(amount)s UAH"
+msgstr ""
+
+#: orders/admin.py:160
+msgid "amount due"
+msgstr ""
+
+#: orders/admin.py:164
+msgid "paid, %"
+msgstr ""
+
+#: orders/admin.py:219
+#, python-format
+msgid "Manual payment %(amount)s UAH recorded, the order is %(status)s now."
+msgstr ""
+
+#: orders/admin.py:238
+#, python-format
+msgid "%(order)s is cancelled, the books are back in stock."
+msgstr ""
+
+#: orders/admin.py:243
+#, python-format
+msgid "%(order)s has payments: return the money to the customer."
+msgstr ""
+
+#: orders/admin.py:248
+msgid "Cancel selected orders (books go back to stock)"
+msgstr ""
+
+#: orders/apps.py:8
+msgid "Orders"
+msgstr ""
+
+#: orders/forms.py:24
+msgid "Save phone and address to my profile"
+msgstr ""
+
+#: orders/forms.py:41 users/forms.py:61
+msgid "City, street, house, flat or the post office number"
+msgstr ""
+
+#: orders/management/commands/cancel_unpaid_orders.py:64
+msgid "--older-than must be at least 30m."
+msgstr ""
+
+#: orders/management/commands/cancel_unpaid_orders.py:81
+#, python-format
+msgid "would cancel %(order)s from %(date)s (%(total)s UAH)"
+msgstr ""
+
+#: orders/management/commands/cancel_unpaid_orders.py:87
+#, python-format
+msgid "%(count)s order, nothing changed (--dry-run)."
+msgid_plural "%(count)s orders, nothing changed (--dry-run)."
+msgstr[0] ""
+msgstr[1] ""
+
+#: orders/management/commands/cancel_unpaid_orders.py:104
+#, python-format
+msgid "skipped: %(error)s"
+msgstr ""
+
+#: orders/management/commands/cancel_unpaid_orders.py:107
+#, python-format
+msgid "cancelled: order #%(number)s"
+msgstr ""
+
+#: orders/management/commands/cancel_unpaid_orders.py:113
+#, python-format
+msgid "Cancelled: %(cancelled)s, skipped: %(skipped)s."
+msgstr ""
+
+#: orders/models.py:27
+msgid "New"
+msgstr ""
+
+#: orders/models.py:28
+msgid "Processing"
+msgstr ""
+
+#: orders/models.py:29
+msgid "Shipped"
+msgstr ""
+
+#: orders/models.py:30
+msgid "Completed"
+msgstr ""
+
+#: orders/models.py:31
+msgid "Cancelled"
+msgstr ""
+
+#: orders/models.py:34
+msgid "Unpaid"
+msgstr ""
+
+#: orders/models.py:35
+msgid "Partially paid"
+msgstr ""
+
+#: orders/models.py:36 orders/templates/orders/order_detail.html:79
+#: payments/templates/payments/emails/payment_received.html:29
+msgid "Paid"
+msgstr ""
+
+#: orders/models.py:40
+msgid "user"
+msgstr ""
+
+#: orders/models.py:47 payments/models.py:54
+msgid "status"
+msgstr ""
+
+#: orders/models.py:57
+msgid "payment status"
+msgstr ""
+
+#: orders/models.py:65
+msgid "full name"
+msgstr ""
+
+#: orders/models.py:66 users/models.py:34
+msgid "phone"
+msgstr ""
+
+#: orders/models.py:67 users/models.py:35
+msgid "delivery address"
+msgstr ""
+
+#: orders/models.py:72
+msgid "total"
+msgstr ""
+
+#: orders/models.py:83 orders/models.py:182 payments/models.py:34
+msgid "order"
+msgstr ""
+
+#: orders/models.py:84
+msgid "orders"
+msgstr ""
+
+#: orders/models.py:97
+#, python-format
+msgid "Order #%(number)s"
+msgstr ""
+
+#: orders/models.py:206
+msgid "quantity"
+msgstr ""
+
+#: orders/models.py:212
+msgid "order item"
+msgstr ""
+
+#: orders/models.py:213
+msgid "order items"
+msgstr ""
+
+#: orders/services.py:77
+msgid "A book from your cart is no longer sold."
+msgstr ""
+
+#: orders/services.py:87
+#, python-format
+msgid "“%(title)s”: only %(stock)s copy left, you ordered %(quantity)s."
+msgid_plural ""
+"“%(title)s”: only %(stock)s copies left, you ordered %(quantity)s."
+msgstr[0] ""
+msgstr[1] ""
+
+#: orders/services.py:164 payments/services.py:191
+msgid "Order not found."
+msgstr ""
+
+#: orders/services.py:166
+#, python-format
+msgid "%(order)s can't be cancelled any more."
+msgstr ""
+
+#: orders/services.py:168
+#, python-format
+msgid "%(order)s is already cancelled."
+msgstr ""
+
+#: orders/services.py:173
+#, python-format
+msgid "%(order)s is not a new unpaid order any more."
+msgstr ""
+
+#: orders/templates/orders/checkout.html:47
+#, python-format
+msgid ""
+"Next time they'll be filled in for you. You can also change them on <a "
+"href=\"%(profile_url)s\">your profile</a>."
+msgstr ""
+
+#: orders/templates/orders/checkout.html:55
+#: users/templates/users/profile.html:14
+msgid "Email"
+msgstr ""
+
+#: orders/templates/orders/checkout.html:58
+msgid "Order emails go to this address (from your profile)."
+msgstr ""
+
+#: orders/templates/orders/checkout.html:62
+#, python-format
+msgid "Place order · %(total)s ₴"
+msgstr ""
+
+#: orders/templates/orders/checkout.html:72
+msgid "Your order"
+msgstr ""
+
+#: orders/templates/orders/checkout.html:99
+msgid ""
+"The books are reserved when you place the order. Then you pay with the “Pay” "
+"button on the order page."
+msgstr ""
+
+#: orders/templates/orders/emails/order_created.html:18
+#: orders/templates/orders/emails/order_created.html:66
+#: orders/templates/orders/emails/order_created.txt:18
+#: payments/templates/payments/emails/payment_received.html:16
+#: payments/templates/payments/emails/payment_received.html:60
+#: payments/templates/payments/emails/payment_received.txt:12
+#: templates/base.html:9 templates/includes/navbar.html:7
+msgid "Bookstore"
+msgstr ""
+
+#: orders/templates/orders/emails/order_created.html:19
+#: orders/templates/orders/emails/order_created.txt:2
+#: payments/templates/payments/emails/payment_received.html:17
+#: payments/templates/payments/emails/payment_received.txt:2
+#, python-format
+msgid "Hello, %(name)s!"
+msgstr ""
+
+#: orders/templates/orders/emails/order_created.html:19
+#: orders/templates/orders/emails/order_created.txt:2
+#: payments/templates/payments/emails/payment_received.html:17
+#: payments/templates/payments/emails/payment_received.txt:2
+msgid "Hello!"
+msgstr ""
+
+#: orders/templates/orders/emails/order_created.html:21
+#, python-format
+msgid ""
+"Thank you for your order. <strong>%(order)s</strong> is created, the books "
+"are reserved for you."
+msgstr ""
+
+#: orders/templates/orders/emails/order_created.html:32
+msgid "Qty"
+msgstr ""
+
+#: orders/templates/orders/emails/order_created.html:56
+#, python-format
+msgid "Payment status: <strong>%(status)s</strong>"
+msgstr ""
+
+#: orders/templates/orders/emails/order_created.html:60
+#: payments/templates/payments/emails/payment_received.html:54
+msgid "Open the order"
+msgstr ""
+
+#: orders/templates/orders/emails/order_created.txt:4
+#, python-format
+msgid ""
+"Thank you for your order. %(order)s is created, the books are reserved for "
+"you."
+msgstr ""
+
+#: orders/templates/orders/emails/order_created.txt:6
+#, python-format
+msgid "%(title)s: %(quantity)s x %(price)s = %(cost)s UAH"
+msgstr ""
+
+#: orders/templates/orders/emails/order_created.txt:8
+#, python-format
+msgid "Total: %(total)s UAH"
+msgstr ""
+
+#: orders/templates/orders/emails/order_created.txt:10
+msgid "Delivery:"
+msgstr ""
+
+#: orders/templates/orders/emails/order_created.txt:15
+#, python-format
+msgid "Payment status: %(status)s."
+msgstr ""
+
+#: orders/templates/orders/emails/order_created.txt:16
+#: payments/templates/payments/emails/payment_received.txt:10
+#, python-format
+msgid "Order page: %(order_url)s"
+msgstr ""
+
+#: orders/templates/orders/emails/order_created_subject.txt:2
+#, python-format
+msgid "Bookstore: %(order)s is created (%(total)s UAH)"
+msgstr ""
+
+#: orders/templates/orders/order_detail.html:9
+#: orders/templates/orders/order_list.html:4
+#: orders/templates/orders/order_list.html:7 templates/includes/navbar.html:99
+msgid "My orders"
+msgstr ""
+
+#: orders/templates/orders/order_detail.html:69
+#, python-format
+msgid "Created %(date)s"
+msgstr ""
+
+#: orders/templates/orders/order_detail.html:75
+#, python-format
+msgid "Paid %(paid)s of %(total)s ₴ (%(percent)s%%)"
+msgstr ""
+
+#: orders/templates/orders/order_detail.html:91
+#, python-format
+msgid "Pay %(due)s ₴"
+msgstr ""
+
+#: orders/templates/orders/order_detail.html:93
+msgid "Card payment on the Stripe page"
+msgstr ""
+
+#: orders/templates/orders/order_detail.html:101
+#, python-format
+msgid "Cancel %(order)s? The books will go back to stock."
+msgstr ""
+
+#: orders/templates/orders/order_detail.html:105
+msgid "Cancel order"
+msgstr ""
+
+#: orders/templates/orders/order_list.html:15
+msgid "Order"
+msgstr ""
+
+#: orders/templates/orders/order_list.html:16
+msgid "Date"
+msgstr ""
+
+#: orders/templates/orders/order_list.html:19
+#: users/templates/users/profile.html:20
+msgid "Status"
+msgstr ""
+
+#: orders/templates/orders/order_list.html:44
+msgid "You have no orders yet."
+msgstr ""
+
+#: orders/views.py:29
+msgid "Your cart is empty."
+msgstr ""
+
+#: orders/views.py:63
+#, python-format
+msgid ""
+"%(order)s is created, the books are reserved for you. Pay for it with the "
+"“Pay” button."
+msgstr ""
+
+#: orders/views.py:134
+#, python-format
+msgid "%(order)s is cancelled. The books are back in stock."
+msgstr ""
+
+#: payments/admin.py:27 payments/models.py:71
+msgid "payments"
+msgstr ""
+
+#: payments/admin.py:39 payments/admin.py:48
+msgid "note"
+msgstr ""
+
+#: payments/admin.py:51
+msgid "cash on delivery, bank transfer #…"
+msgstr ""
+
+#: payments/admin.py:73
+msgid "The order is cancelled, payments can't be added."
+msgstr ""
+
+#: payments/admin.py:77
+#, python-format
+msgid "Only %(due)s UAH is due, the new payments add up to %(sum)s UAH."
+msgstr ""
+
+#: payments/admin.py:97
+msgid "manual payment"
+msgstr ""
+
+#: payments/admin.py:98
+msgid "add a manual payment (money received outside the site)"
+msgstr ""
+
+#: payments/apps.py:8
+msgid "Payments"
+msgstr ""
+
+#: payments/models.py:24
+msgid "Manual"
+msgstr ""
+
+#: payments/models.py:27
+msgid "Pending"
+msgstr ""
+
+#: payments/models.py:28
+msgid "Succeeded"
+msgstr ""
+
+#: payments/models.py:29
+msgid "Failed"
+msgstr ""
+
+#: payments/models.py:30
+msgid "Expired"
+msgstr ""
+
+#: payments/models.py:40
+msgid "provider"
+msgstr ""
+
+#: payments/models.py:44
+msgid "provider's id"
+msgstr ""
+
+#: payments/models.py:48
+msgid "amount"
+msgstr ""
+
+#: payments/models.py:62
+msgid "details"
+msgstr ""
+
+#: payments/models.py:66
+msgid "paid at"
+msgstr ""
+
+#: payments/models.py:70
+msgid "payment"
+msgstr ""
+
+#: payments/models.py:90
+#, python-format
+msgid "%(provider)s %(amount)s UAH (%(status)s) for order #%(order)s"
+msgstr ""
+
+#: payments/providers/base.py:51
+#, python-format
+msgid "%(provider)s: online payment is not supported."
+msgstr ""
+
+#: payments/providers/base.py:75
+#, python-format
+msgid "%(provider)s: webhooks are not supported."
+msgstr ""
+
+#: payments/providers/stripe_checkout.py:56
+msgid "Online payment is not configured."
+msgstr ""
+
+#: payments/providers/stripe_checkout.py:82
+#, python-format
+msgid "Bookstore: order #%(number)s"
+msgstr ""
+
+#: payments/providers/stripe_checkout.py:118
+msgid "The payment service is not available now, please try again later."
+msgstr ""
+
+#: payments/providers/stripe_checkout.py:137
+msgid "Can't check the payment now."
+msgstr ""
+
+#: payments/providers/stripe_checkout.py:155
+msgid "Can't close the payment page now."
+msgstr ""
+
+#: payments/services.py:49
+msgid "The amount must be greater than 0."
+msgstr ""
+
+#: payments/services.py:54
+#, python-format
+msgid "%(order)s is cancelled, payments can't be added."
+msgstr ""
+
+#: payments/services.py:58
+#, python-format
+msgid "%(order)s: only %(due)s UAH is due, %(amount)s UAH is too much."
+msgstr ""
+
+#: payments/services.py:193
+#, python-format
+msgid "%(order)s is cancelled."
+msgstr ""
+
+#: payments/services.py:196
+#, python-format
+msgid "%(order)s is already paid."
+msgstr ""
+
+#: payments/services.py:208
+msgid "The payment is being prepared, please try again in a minute."
+msgstr ""
+
+#: payments/templates/payments/emails/payment_received.html:19
+#, python-format
+msgid ""
+"We received your payment of <strong>%(amount)s ₴</strong> for "
+"<strong>%(order)s</strong>."
+msgstr ""
+
+#: payments/templates/payments/emails/payment_received.html:25
+msgid "Order total"
+msgstr ""
+
+#: payments/templates/payments/emails/payment_received.html:34
+msgid "Still due"
+msgstr ""
+
+#: payments/templates/payments/emails/payment_received.html:42
+msgid ""
+"The order is <strong>fully paid</strong>. We'll let you know when it's "
+"shipped."
+msgstr ""
+
+#: payments/templates/payments/emails/payment_received.html:46
+#, python-format
+msgid "The order is <strong>%(status)s</strong>."
+msgstr ""
+
+#: payments/templates/payments/emails/payment_received.txt:4
+#, python-format
+msgid "We received your payment of %(amount)s UAH for %(order)s."
+msgstr ""
+
+#: payments/templates/payments/emails/payment_received.txt:6
+#, python-format
+msgid "Order total: %(total)s UAH"
+msgstr ""
+
+#: payments/templates/payments/emails/payment_received.txt:7
+#, python-format
+msgid "Paid: %(paid)s UAH (%(percent)s%%)"
+msgstr ""
+
+#: payments/templates/payments/emails/payment_received.txt:8
+msgid "The order is fully paid. We'll let you know when it's shipped."
+msgstr ""
+
+#: payments/templates/payments/emails/payment_received.txt:8
+#, python-format
+msgid "Still due: %(due)s UAH."
+msgstr ""
+
+#: payments/templates/payments/emails/payment_received_subject.txt:2
+#, python-format
+msgid "Bookstore: payment for %(order)s received (%(amount)s UAH)"
+msgstr ""
+
+#: payments/templates/payments/payment_success.html:10
+msgid "Thank you, the payment is received"
+msgstr ""
+
+#: payments/templates/payments/payment_success.html:12
+#, python-format
+msgid "%(amount)s ₴ for %(order)s."
+msgstr ""
+
+#: payments/templates/payments/payment_success.html:13
+msgid "The order is fully paid."
+msgstr ""
+
+#: payments/templates/payments/payment_success.html:18
+msgid "The payment is being confirmed"
+msgstr ""
+
+#: payments/templates/payments/payment_success.html:20
+msgid "It usually takes a few seconds. The order page will show the result."
+msgstr ""
+
+#: payments/templates/payments/payment_success.html:24
+msgid "The payment didn't go through"
+msgstr ""
+
+#: payments/templates/payments/payment_success.html:25
+msgid "You can try again from the order page."
+msgstr ""
+
+#: payments/templates/payments/payment_success.html:27
+#, python-format
+msgid "Open %(order)s"
+msgstr ""
+
+#: payments/views.py:58
+msgid "The payment was not completed. You can pay later with the “Pay” button."
+msgstr ""
+
+#: templates/403.html:10 templates/403.html:15
+msgid "Access denied"
+msgstr ""
+
+#: templates/403.html:17
+msgid "You don't have permission to open this page."
+msgstr ""
+
+#: templates/403.html:22
+#, python-format
+msgid ""
+"Your groups and permissions are listed on <a href=\"%(profile_url)s\">your "
+"profile</a>."
+msgstr ""
+
+#: templates/404.html:11 templates/404.html:16
+msgid "Page not found"
+msgstr ""
+
+#: templates/404.html:18
+msgid "The page doesn't exist or isn't available to you."
+msgstr ""
+
+#: templates/base.html:30
+msgid "Bookstore · Hillel Django homework"
+msgstr ""
+
+#: templates/includes/messages.html:8
+msgid "Close"
+msgstr ""
+
+#: templates/includes/navbar.html:11
+msgid "Toggle navigation"
+msgstr ""
+
+#: templates/includes/navbar.html:38
+msgid "Admin"
+msgstr ""
+
+#: templates/includes/navbar.html:61 users/admin.py:21
+#: users/templates/users/profile.html:41
+msgid "Language"
+msgstr ""
+
+#: templates/includes/navbar.html:98 users/templates/users/profile.html:4
+#: users/templates/users/profile_edit.html:11
+msgid "My profile"
+msgstr ""
+
+#: templates/includes/navbar.html:106
+msgid "Log out"
+msgstr ""
+
+#: templates/includes/navbar.html:115 users/templates/users/auth_form.html:54
+#: users/views.py:40
+msgid "Log in"
+msgstr ""
+
+#: templates/includes/navbar.html:119 users/templates/users/auth_form.html:52
+#: users/views.py:72
+msgid "Sign up"
+msgstr ""
+
+#: templates/includes/pagination.html:11
+msgid "Pages"
+msgstr ""
+
+#: templates/includes/pagination.html:17
+msgid "Previous"
+msgstr ""
+
+#: templates/includes/pagination.html:40
+msgid "Next"
+msgstr ""
+
+#: users/admin.py:20 users/templates/users/profile.html:48
+#: users/templates/users/profile_edit.html:18
+msgid "Delivery details"
+msgstr ""
+
+#: users/apps.py:8
+msgid "Users"
+msgstr ""
+
+#: users/models.py:25
+msgid "email address"
+msgstr ""
+
+#: users/models.py:27
+msgid "A user with this email already exists."
+msgstr ""
+
+#: users/models.py:42
+msgid "language"
+msgstr ""
+
+#: users/models.py:46
+msgid "Language of the site and of the emails."
+msgstr ""
+
+#: users/phone.py:19
+msgid "Enter a phone number: 10–15 digits, e.g. +380 67 123 45 67."
+msgstr ""
+
+#: users/templates/users/auth_form.html:52
+msgid "No account yet?"
+msgstr ""
+
+#: users/templates/users/auth_form.html:54
+msgid "Already have an account?"
+msgstr ""
+
+#: users/templates/users/profile.html:17
+msgid "Joined"
+msgstr ""
+
+#: users/templates/users/profile.html:23
+msgid "superuser"
+msgstr ""
+
+#: users/templates/users/profile.html:23
+msgid "has every permission"
+msgstr ""
+
+#: users/templates/users/profile.html:25
+msgid "staff"
+msgstr ""
+
+#: users/templates/users/profile.html:25
+msgid "can open the admin"
+msgstr ""
+
+#: users/templates/users/profile.html:27
+msgid "regular user"
+msgstr ""
+
+#: users/templates/users/profile.html:31
+msgid "Groups"
+msgstr ""
+
+#: users/templates/users/profile.html:36 users/templates/users/profile.html:81
+msgid "none"
+msgstr ""
+
+#: users/templates/users/profile.html:53
+msgid "Name"
+msgstr ""
+
+#: users/templates/users/profile.html:56
+msgid "Phone"
+msgstr ""
+
+#: users/templates/users/profile.html:59
+msgid "Address"
+msgstr ""
+
+#: users/templates/users/profile.html:66
+msgid "What you can do in the catalog"
+msgstr ""
+
+#: users/templates/users/profile.html:69
+msgid "add books"
+msgstr ""
+
+#: users/templates/users/profile.html:70
+msgid "edit books"
+msgstr ""
+
+#: users/templates/users/profile.html:71
+msgid "change stock"
+msgstr ""
+
+#: users/templates/users/profile.html:72
+msgid "delete books"
+msgstr ""
+
+#: users/templates/users/profile.html:76
+#, python-format
+msgid "All permissions (%(count)s)"
+msgstr ""
+
+#: users/templates/users/profile_edit.html:4
+msgid "Edit profile"
+msgstr ""
+
+#: users/templates/users/profile_edit.html:19
+msgid "Filled in for you at checkout."
+msgstr ""
+
+#: users/templates/users/profile_edit.html:34
+msgid "Save"
+msgstr ""
+
+#: users/views.py:39
+#, python-format
+msgid "Welcome back, %(username)s!"
+msgstr ""
+
+#: users/views.py:62
+msgid "You have been logged out."
+msgstr ""
+
+#: users/views.py:71
+#, python-format
+msgid "Account created. Welcome, %(username)s!"
+msgstr ""
+
+#: users/views.py:72
+msgid "Create account"
+msgstr ""
+
+#: users/views.py:150
+msgid "Your profile is saved."
+msgstr ""

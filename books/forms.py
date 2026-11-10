@@ -69,6 +69,9 @@ class BookForm(forms.ModelForm):
     def __init__(self, *args, user=None, **kwargs):
         # user comes from BookFormUserMixin.get_form_kwargs() in the views
         super().__init__(*args, **kwargs)
+        # Django's default empty choice "- Select an option -" (new in
+        # Django 6.1) has no Ukrainian translation in Django yet
+        self.fields["author"].empty_label = _("— Choose an author —")
         if user is not None and not user.has_perm("books.manage_stock"):
             stock = self.fields["stock"]
             # disabled: the browser shows the field greyed out AND Django

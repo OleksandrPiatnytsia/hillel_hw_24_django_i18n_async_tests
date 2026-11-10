@@ -39,3 +39,8 @@ logs
 Dockerfile
 .dockerignore
 docker-compose.yml
+
+# Test reports (pytest --cov-report=html): not needed in the image
+htmlcov
+.coverage
+.pytest_cache

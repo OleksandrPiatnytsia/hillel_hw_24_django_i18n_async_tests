@@ -1,14 +1,14 @@
-{% autoescape off %}{# Plain text: no HTML escaping #}
-Hello{% if order.full_name %}, {{ order.full_name }}{% endif %}!
+{% load i18n %}{% autoescape off %}{# Plain text: no HTML escaping #}
+{% if order.full_name %}{% blocktranslate with name=order.full_name %}Hello, {{ name }}!{% endblocktranslate %}{% else %}{% translate "Hello!" %}{% endif %}
 
-We received your payment of {{ payment.amount }} UAH for {{ order }}.
+{% blocktranslate with amount=payment.amount %}We received your payment of {{ amount }} UAH for {{ order }}.{% endblocktranslate %}
 
-Order total: {{ order.total }} UAH
-Paid: {{ order.paid_amount }} UAH ({{ order.paid_percent }}%)
-{% if order.payment_status == "paid" %}The order is fully paid. We'll let you know when it's shipped.{% else %}Still due: {{ order.amount_due }} UAH.{% endif %}
+{% blocktranslate with total=order.total %}Order total: {{ total }} UAH{% endblocktranslate %}
+{% blocktranslate with paid=order.paid_amount percent=order.paid_percent %}Paid: {{ paid }} UAH ({{ percent }}%){% endblocktranslate %}
+{% if order.payment_status == "paid" %}{% translate "The order is fully paid. We'll let you know when it's shipped." %}{% else %}{% blocktranslate with due=order.amount_due %}Still due: {{ due }} UAH.{% endblocktranslate %}{% endif %}
 
-Order page: {{ order_url }}
+{% blocktranslate %}Order page: {{ order_url }}{% endblocktranslate %}
 
-Bookstore
+{% translate "Bookstore" %}
 {{ site_url }}
 {% endautoescape %}

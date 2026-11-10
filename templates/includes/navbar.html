@@ -4,11 +4,11 @@
 {# sticky-top: navbar stays at the top of the window while scrolling #}
 <nav class="navbar navbar-expand-lg bg-dark sticky-top" data-bs-theme="dark">
   <div class="container">
-    <a class="navbar-brand fw-semibold" href="{% url 'books:list' %}">📚 Bookstore</a>
+    <a class="navbar-brand fw-semibold" href="{% url 'books:list' %}">📚 {% translate "Bookstore" %}</a>
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
             data-bs-target="#mainNavbar" aria-controls="mainNavbar"
-            aria-expanded="false" aria-label="Toggle navigation">
+            aria-expanded="false" aria-label="{% translate 'Toggle navigation' %}">
       <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -17,25 +17,25 @@
         <li class="nav-item">
           <a class="nav-link {% if current == 'list' %}active{% endif %}"
              {% if current == 'list' %}aria-current="page"{% endif %}
-             href="{% url 'books:list' %}">Catalog</a>
+             href="{% url 'books:list' %}">{% translate "Catalog" %}</a>
         </li>
         <li class="nav-item">
           {# "author_list" and "author_detail" both highlight "Authors" #}
           <a class="nav-link {% if current == 'author_list' or current == 'author_detail' %}active{% endif %}"
              {% if current == 'author_list' %}aria-current="page"{% endif %}
-             href="{% url 'books:author_list' %}">Authors</a>
+             href="{% url 'books:author_list' %}">{% translate "Authors" %}</a>
         </li>
         {% if perms.books.add_book %}
           <li class="nav-item">
             <a class="nav-link {% if current == 'create' %}active{% endif %}"
                {% if current == 'create' %}aria-current="page"{% endif %}
-               href="{% url 'books:create' %}">Add book</a>
+               href="{% url 'books:create' %}">{% translate "Add book" %}</a>
           </li>
         {% endif %}
         {# "user" comes from the auth context processor (settings.TEMPLATES) #}
         {% if user.is_staff %}
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
+            <a class="nav-link" href="{% url 'admin:index' %}">{% translate "Admin" %}</a>
           </li>
         {% endif %}
       </ul>
@@ -43,9 +43,9 @@
       {# Quick search: GET to the catalog with only ?q=... #}
       <form class="d-flex me-lg-3 mb-2 mb-lg-0" role="search" method="get" action="{% url 'books:list' %}">
         <input class="form-control me-2" type="search" name="q"
-               value="{{ request.GET.q }}" placeholder="Title or author"
-               aria-label="Search">
-        <button class="btn btn-outline-light" type="submit">Search</button>
+               value="{{ request.GET.q }}" placeholder="{% translate 'Title or author' %}"
+               aria-label="{% translate 'Search' %}">
+        <button class="btn btn-outline-light" type="submit">{% translate "Search" %}</button>
       </form>
 
       <ul class="navbar-nav">
@@ -79,7 +79,7 @@
         <li class="nav-item me-lg-2">
           <a class="nav-link {% if current == 'detail' and request.resolver_match.namespace == 'cart' %}active{% endif %}"
              href="{% url 'cart:detail' %}">
-            🛒 Cart
+            🛒 {% translate "Cart" %}
             {# "cart" from the context processor; |length -> Cart.__len__: #}
             {# copies in the session, no SQL query #}
             {% with count=cart|length %}
@@ -95,15 +95,15 @@
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
               <li><span class="dropdown-item-text small text-body-secondary">{{ user.email }}</span></li>
-              <li><a class="dropdown-item" href="{% url 'users:profile' %}">My profile</a></li>
-              <li><a class="dropdown-item" href="{% url 'orders:list' %}">My orders</a></li>
+              <li><a class="dropdown-item" href="{% url 'users:profile' %}">{% translate "My profile" %}</a></li>
+              <li><a class="dropdown-item" href="{% url 'orders:list' %}">{% translate "My orders" %}</a></li>
               <li><hr class="dropdown-divider"></li>
               <li>
                 {# Logout must be POST (Django 5+): a plain link could be #}
                 {# triggered by another site (CSRF), a form with a token can't #}
                 <form method="post" action="{% url 'users:logout' %}">
                   {% csrf_token %}
-                  <button type="submit" class="dropdown-item">Log out</button>
+                  <button type="submit" class="dropdown-item">{% translate "Log out" %}</button>
                 </form>
               </li>
             </ul>
@@ -112,11 +112,11 @@
           {# ?next=: after login come back to the page the user was on #}
           <li class="nav-item">
             <a class="nav-link {% if current == 'login' %}active{% endif %}"
-               href="{% url 'users:login' %}{% if current != 'login' and current != 'signup' %}?next={{ request.get_full_path|urlencode }}{% endif %}">Log in</a>
+               href="{% url 'users:login' %}{% if current != 'login' and current != 'signup' %}?next={{ request.get_full_path|urlencode }}{% endif %}">{% translate "Log in" %}</a>
           </li>
           <li class="nav-item">
             <a class="btn btn-outline-light ms-lg-2"
-               href="{% url 'users:signup' %}{% if current != 'login' and current != 'signup' %}?next={{ request.get_full_path|urlencode }}{% endif %}">Sign up</a>
+               href="{% url 'users:signup' %}{% if current != 'login' and current != 'signup' %}?next={{ request.get_full_path|urlencode }}{% endif %}">{% translate "Sign up" %}</a>
           </li>
         {% endif %}
       </ul>

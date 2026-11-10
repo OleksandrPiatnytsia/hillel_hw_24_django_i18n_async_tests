@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% comment %}
 Shared by BookCreateView and BookUpdateView.
@@ -6,17 +7,17 @@ UpdateView puts the edited book into context as "object", CreateView doesn't —
 that's how we tell "add" from "edit".
 {% endcomment %}
 
-{% block title %}{% if object %}Edit “{{ object.title }}”{% else %}Add book{% endif %}{% endblock %}
+{% block title %}{% if object %}{% blocktranslate with title=object.title %}Edit “{{ title }}”{% endblocktranslate %}{% else %}{% translate "Add book" %}{% endif %}{% endblock %}
 
 {% block content %}
-<nav aria-label="breadcrumb">
+<nav aria-label="{% translate 'Breadcrumb' %}">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'books:list' %}">Catalog</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'books:list' %}">{% translate "Catalog" %}</a></li>
     {% if object %}
       <li class="breadcrumb-item"><a href="{{ object.get_absolute_url }}">{{ object.title }}</a></li>
-      <li class="breadcrumb-item active" aria-current="page">Edit</li>
+      <li class="breadcrumb-item active" aria-current="page">{% translate "Edit" %}</li>
     {% else %}
-      <li class="breadcrumb-item active" aria-current="page">Add book</li>
+      <li class="breadcrumb-item active" aria-current="page">{% translate "Add book" %}</li>
     {% endif %}
   </ol>
 </nav>
@@ -25,7 +26,7 @@ that's how we tell "add" from "edit".
   <div class="col-lg-8">
     <div class="card shadow-sm">
       <div class="card-body p-4">
-        <h1 class="h4 mb-4">{% if object %}Edit book{% else %}Add book{% endif %}</h1>
+        <h1 class="h4 mb-4">{% if object %}{% translate "Edit book" %}{% else %}{% translate "Add book" %}{% endif %}</h1>
 
         {# novalidate: let Django show its own errors instead of browser popups #}
         {# enctype="multipart/form-data": without it the browser sends only the file NAME, #}
@@ -72,11 +73,11 @@ that's how we tell "add" from "edit".
 
           <div class="d-flex gap-2">
             <button type="submit" class="btn btn-primary">
-              {% if object %}Save changes{% else %}Create book{% endif %}
+              {% if object %}{% translate "Save changes" %}{% else %}{% translate "Create book" %}{% endif %}
             </button>
             <a class="btn btn-outline-secondary"
                href="{% if object %}{{ object.get_absolute_url }}{% else %}{% url 'books:list' %}{% endif %}">
-              Cancel
+              {% translate "Cancel" %}
             </a>
           </div>
         </form>

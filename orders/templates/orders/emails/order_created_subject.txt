@@ -1,2 +1,2 @@
 {# One line: emails.py strips the newline at the end of the file #}
-{% autoescape off %}Bookstore: {{ order }} is created ({{ order.total }} UAH){% endautoescape %}
+{% load i18n %}{% autoescape off %}{% blocktranslate with total=order.total %}Bookstore: {{ order }} is created ({{ total }} UAH){% endblocktranslate %}{% endautoescape %}

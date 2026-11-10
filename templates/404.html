@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% comment %}
 Rendered by django.views.defaults.page_not_found for every Http404
@@ -7,15 +8,15 @@ Only with DEBUG=False: with DEBUG=True Django shows its technical 404 page
 (the list of URL patterns) instead.
 {% endcomment %}
 
-{% block title %}Page not found{% endblock %}
+{% block title %}{% translate "Page not found" %}{% endblock %}
 
 {% block content %}
 <div class="text-center py-5">
   <div class="display-1">🔍</div>
-  <h1 class="h3 mt-3">Page not found</h1>
+  <h1 class="h3 mt-3">{% translate "Page not found" %}</h1>
   <p class="text-body-secondary">
-    The page doesn't exist or isn't available to you.
+    {% translate "The page doesn't exist or isn't available to you." %}
   </p>
-  <a class="btn btn-primary" href="{% url 'books:list' %}">Back to catalog</a>
+  <a class="btn btn-primary" href="{% url 'books:list' %}">{% translate "Back to catalog" %}</a>
 </div>
 {% endblock %}

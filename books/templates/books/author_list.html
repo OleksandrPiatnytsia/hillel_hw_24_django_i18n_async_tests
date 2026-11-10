@@ -1,13 +1,14 @@
 {% extends "base.html" %}
+{% load i18n %}
 
-{% block title %}Authors{% endblock %}
+{% block title %}{% translate "Authors" %}{% endblock %}
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
-  <h1 class="h3 mb-0">Authors</h1>
+  <h1 class="h3 mb-0">{% translate "Authors" %}</h1>
   {% if user.is_staff and perms.books.add_author %}
     {# Authors are managed in the admin: it needs is_staff AND the permission #}
-    <a class="btn btn-outline-primary" href="{% url 'admin:books_author_add' %}">+ Add author (admin)</a>
+    <a class="btn btn-outline-primary" href="{% url 'admin:books_author_add' %}">+ {% translate "Add author (admin)" %}</a>
   {% endif %}
 </div>
 
@@ -19,11 +20,15 @@
         {{ author.name }}
         {# books_count comes from annotate(Count("books")) in AuthorListView #}
         <span class="badge text-bg-secondary rounded-pill">
-          {{ author.books_count }} book{{ author.books_count|pluralize }}
+          {% blocktranslate trimmed count count=author.books_count %}
+            {{ count }} book
+          {% plural %}
+            {{ count }} books
+          {% endblocktranslate %}
         </span>
       </a>
     {% empty %}
-      <div class="list-group-item text-body-secondary">No authors yet.</div>
+      <div class="list-group-item text-body-secondary">{% translate "No authors yet." %}</div>
     {% endfor %}
   </div>
 </div>

@@ -1,6 +1,7 @@
 {% extends "base.html" %}
+{% load i18n %}
 
-{% block title %}My profile{% endblock %}
+{% block title %}{% translate "My profile" %}{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
@@ -10,70 +11,74 @@
         <h1 class="h4 mb-4">👤 {{ user.username }}</h1>
 
         <dl class="row mb-0">
-          <dt class="col-sm-4">Email</dt>
+          <dt class="col-sm-4">{% translate "Email" %}</dt>
           <dd class="col-sm-8">{{ user.email }}</dd>
 
-          <dt class="col-sm-4">Joined</dt>
+          <dt class="col-sm-4">{% translate "Joined" %}</dt>
           <dd class="col-sm-8">{{ user.date_joined|date:"d.m.Y H:i" }}</dd>
 
-          <dt class="col-sm-4">Status</dt>
+          <dt class="col-sm-4">{% translate "Status" %}</dt>
           <dd class="col-sm-8">
             {% if user.is_superuser %}
-              <span class="badge text-bg-danger">superuser</span> has every permission
+              <span class="badge text-bg-danger">{% translate "superuser" %}</span> {% translate "has every permission" %}
             {% elif user.is_staff %}
-              <span class="badge text-bg-secondary">staff</span> can open the admin
+              <span class="badge text-bg-secondary">{% translate "staff" %}</span> {% translate "can open the admin" %}
             {% else %}
-              regular user
+              {% translate "regular user" %}
             {% endif %}
           </dd>
 
-          <dt class="col-sm-4">Groups</dt>
+          <dt class="col-sm-4">{% translate "Groups" %}</dt>
           <dd class="col-sm-8">
             {% for group in groups %}
               <span class="badge text-bg-primary">{{ group.name }}</span>
             {% empty %}
-              <span class="text-body-secondary">none</span>
+              <span class="text-body-secondary">{% translate "none" %}</span>
             {% endfor %}
           </dd>
+
+          {# get_<field>_display: the label of the choice, "Українська" / "English" #}
+          <dt class="col-sm-4">{% translate "Language" %}</dt>
+          <dd class="col-sm-8">{{ user.get_language_display }}</dd>
         </dl>
 
         <hr>
 
         <div class="d-flex justify-content-between align-items-center mb-2">
-          <h2 class="h6 mb-0">Delivery details</h2>
-          <a class="btn btn-sm btn-outline-primary" href="{% url 'users:profile_edit' %}">Edit</a>
+          <h2 class="h6 mb-0">{% translate "Delivery details" %}</h2>
+          <a class="btn btn-sm btn-outline-primary" href="{% url 'users:profile_edit' %}">{% translate "Edit" %}</a>
         </div>
         {# Prefilled at checkout #}
         <dl class="row mb-0">
-          <dt class="col-sm-4">Name</dt>
+          <dt class="col-sm-4">{% translate "Name" %}</dt>
           <dd class="col-sm-8">{{ user.get_full_name|default:"—" }}</dd>
 
-          <dt class="col-sm-4">Phone</dt>
+          <dt class="col-sm-4">{% translate "Phone" %}</dt>
           <dd class="col-sm-8">{{ user.phone|default:"—" }}</dd>
 
-          <dt class="col-sm-4">Address</dt>
+          <dt class="col-sm-4">{% translate "Address" %}</dt>
           {# linebreaksbr: line breaks of the textarea -> <br> #}
           <dd class="col-sm-8">{{ user.address|linebreaksbr|default:"—" }}</dd>
         </dl>
 
         <hr>
 
-        <h2 class="h6">What you can do in the catalog</h2>
+        <h2 class="h6">{% translate "What you can do in the catalog" %}</h2>
         {# perms.<app>.<codename>: the same check as user.has_perm("books.add_book") #}
         <ul class="list-unstyled mb-3">
-          <li>{% if perms.books.add_book %}✅{% else %}❌{% endif %} add books</li>
-          <li>{% if perms.books.change_book %}✅{% else %}❌{% endif %} edit books</li>
-          <li>{% if perms.books.manage_stock %}✅{% else %}❌{% endif %} change stock</li>
-          <li>{% if perms.books.delete_book %}✅{% else %}❌{% endif %} delete books</li>
+          <li>{% if perms.books.add_book %}✅{% else %}❌{% endif %} {% translate "add books" %}</li>
+          <li>{% if perms.books.change_book %}✅{% else %}❌{% endif %} {% translate "edit books" %}</li>
+          <li>{% if perms.books.manage_stock %}✅{% else %}❌{% endif %} {% translate "change stock" %}</li>
+          <li>{% if perms.books.delete_book %}✅{% else %}❌{% endif %} {% translate "delete books" %}</li>
         </ul>
 
         <details>
-          <summary class="small text-body-secondary">All permissions ({{ permissions|length }})</summary>
+          <summary class="small text-body-secondary">{% blocktranslate with count=permissions|length %}All permissions ({{ count }}){% endblocktranslate %}</summary>
           <ul class="small font-monospace mt-2 mb-0">
             {% for permission in permissions %}
               <li>{{ permission }}</li>
             {% empty %}
-              <li class="text-body-secondary">none</li>
+              <li class="text-body-secondary">{% translate "none" %}</li>
             {% endfor %}
           </ul>
         </details>

@@ -6,14 +6,15 @@ and page_range (elided range from the view).
 {% querystring page=N %} keeps all current GET params (filters, sort)
 and only replaces "page" — so filters survive when switching pages.
 {% endcomment %}
+{% load i18n %}
 {% if is_paginated %}
-<nav aria-label="Pages" class="mt-4">
+<nav aria-label="{% translate 'Pages' %}" class="mt-4">
   <ul class="pagination justify-content-center">
 
     {% if page_obj.has_previous %}
       <li class="page-item">
         <a class="page-link" href="{% querystring page=page_obj.previous_page_number %}"
-           aria-label="Previous">&laquo;</a>
+           aria-label="{% translate 'Previous' %}">&laquo;</a>
       </li>
     {% else %}
       <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
@@ -36,7 +37,7 @@ and only replaces "page" — so filters survive when switching pages.
     {% if page_obj.has_next %}
       <li class="page-item">
         <a class="page-link" href="{% querystring page=page_obj.next_page_number %}"
-           aria-label="Next">&raquo;</a>
+           aria-label="{% translate 'Next' %}">&raquo;</a>
       </li>
     {% else %}
       <li class="page-item disabled"><span class="page-link">&raquo;</span></li>

@@ -1,9 +1,10 @@
 {% extends "base.html" %}
+{% load i18n %}
 
-{% block title %}Cart{% endblock %}
+{% block title %}{% translate "Cart" %}{% endblock %}
 
 {% block content %}
-<h1 class="h3 mb-4">Cart</h1>
+<h1 class="h3 mb-4">{% translate "Cart" %}</h1>
 
 {# "cart" comes from the context processor (cart/context_processors.py) #}
 {% if cart %}
@@ -12,11 +13,11 @@
       <table class="table align-middle mb-0">
         <thead>
           <tr>
-            <th scope="col" colspan="2">Book</th>
-            <th scope="col" class="text-end">Price</th>
-            <th scope="col">Quantity</th>
-            <th scope="col" class="text-end">Cost</th>
-            <th scope="col"><span class="visually-hidden">Remove</span></th>
+            <th scope="col" colspan="2">{% translate "Book" %}</th>
+            <th scope="col" class="text-end">{% translate "Price" %}</th>
+            <th scope="col">{% translate "Quantity" %}</th>
+            <th scope="col" class="text-end">{% translate "Cost" %}</th>
+            <th scope="col"><span class="visually-hidden">{% translate "Remove" %}</span></th>
           </tr>
         </thead>
         <tbody>
@@ -33,7 +34,11 @@
                   {% if item.exceeds_stock %}
                     {# Stock dropped after the book was added (someone else bought it) #}
                     <div class="small text-danger">
-                      {% if book.stock %}Only {{ book.stock }} left in stock{% else %}Out of stock now{% endif %}
+                      {% if book.stock %}{% blocktranslate trimmed count stock=book.stock %}
+                        Only {{ stock }} copy left in stock
+                      {% plural %}
+                        Only {{ stock }} copies left in stock
+                      {% endblocktranslate %}{% else %}{% translate "Out of stock now" %}{% endif %}
                     </div>
                   {% endif %}
                 </td>
@@ -46,8 +51,8 @@
                     {# max is a hint for the browser; Cart.add() limits by stock itself #}
                     <input class="form-control form-control-sm" style="width: 5rem"
                            type="number" name="quantity" value="{{ item.quantity }}"
-                           min="1" max="{{ book.stock }}" aria-label="Quantity of {{ book.title }}">
-                    <button class="btn btn-sm btn-outline-secondary" type="submit">Update</button>
+                           min="1" max="{{ book.stock }}" aria-label="{% blocktranslate with title=book.title %}Quantity of {{ title }}{% endblocktranslate %}">
+                    <button class="btn btn-sm btn-outline-secondary" type="submit">{% translate "Update" %}</button>
                   </form>
                 </td>
                 <td class="text-end text-nowrap fw-semibold">{{ item.cost }} ₴</td>
@@ -55,7 +60,7 @@
                   <form method="post" action="{% url 'cart:remove' book.pk %}">
                     {% csrf_token %}
                     <button class="btn btn-sm btn-outline-danger" type="submit"
-                            aria-label="Remove {{ book.title }}">&times;</button>
+                            aria-label="{% blocktranslate with title=book.title %}Remove {{ title }}{% endblocktranslate %}">&times;</button>
                   </form>
                 </td>
               </tr>
@@ -64,7 +69,7 @@
         </tbody>
         <tfoot>
           <tr>
-            <th scope="row" colspan="4" class="text-end">Total</th>
+            <th scope="row" colspan="4" class="text-end">{% translate "Total" %}</th>
             {# cart.total reuses the items loaded for the table: no second query #}
             <td class="text-end text-nowrap fs-5 fw-semibold">{{ cart.total }} ₴</td>
             <td></td>
@@ -74,20 +79,20 @@
     </div>
 
     <div class="card-footer d-flex flex-wrap gap-2">
-      <a class="btn btn-outline-secondary" href="{% url 'books:list' %}">&larr; Continue shopping</a>
+      <a class="btn btn-outline-secondary" href="{% url 'books:list' %}">&larr; {% translate "Continue shopping" %}</a>
       <form class="ms-auto" method="post" action="{% url 'cart:clear' %}">
         {% csrf_token %}
-        <button class="btn btn-outline-danger" type="submit">Clear cart</button>
+        <button class="btn btn-outline-danger" type="submit">{% translate "Clear cart" %}</button>
       </form>
       {# A guest is sent to the login page first (login_required) and #}
       {# comes back here via ?next=; the cart is kept through the login #}
-      <a class="btn btn-primary" href="{% url 'orders:checkout' %}">Checkout &rarr;</a>
+      <a class="btn btn-primary" href="{% url 'orders:checkout' %}">{% translate "Checkout" %} &rarr;</a>
     </div>
   </div>
 {% else %}
   <div class="alert alert-info">
-    The cart is empty.
-    <a class="alert-link" href="{% url 'books:list' %}">Go to the catalog</a>
+    {% translate "The cart is empty." %}
+    <a class="alert-link" href="{% url 'books:list' %}">{% translate "Go to the catalog" %}</a>
   </div>
 {% endif %}
 {% endblock %}

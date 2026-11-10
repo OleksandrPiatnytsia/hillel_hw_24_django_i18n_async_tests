@@ -6,7 +6,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}Bookstore{% endblock %} · Bookstore</title>
+  <title>{% block title %}{% translate "Bookstore" %}{% endblock %} · {% translate "Bookstore" %}</title>
   <link rel="icon" type="image/svg+xml" href="{% static 'img/favicon.svg' %}">
 
   <link rel="stylesheet"
@@ -27,7 +27,7 @@
 
   <footer class="border-top py-3 bg-body">
     <div class="container small text-body-secondary">
-      Bookstore · Hillel Django homework
+      {% translate "Bookstore · Hillel Django homework" %}
     </div>
   </footer>
 

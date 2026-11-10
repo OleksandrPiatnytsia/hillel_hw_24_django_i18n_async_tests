@@ -1,20 +1,20 @@
-{% autoescape off %}{# Plain text: no HTML escaping, "&" stays "&" #}
-Hello{% if order.full_name %}, {{ order.full_name }}{% endif %}!
+{% load i18n %}{% autoescape off %}{# Plain text: no HTML escaping, "&" stays "&" #}
+{% if order.full_name %}{% blocktranslate with name=order.full_name %}Hello, {{ name }}!{% endblocktranslate %}{% else %}{% translate "Hello!" %}{% endif %}
 
-Thank you for your order. {{ order }} is created, the books are reserved for you.
+{% blocktranslate %}Thank you for your order. {{ order }} is created, the books are reserved for you.{% endblocktranslate %}
 
-{% for item in order.items.all %}- {{ item.title }}: {{ item.quantity }} x {{ item.price }} = {{ item.cost }} UAH
+{% for item in order.items.all %}- {% blocktranslate with title=item.title quantity=item.quantity price=item.price cost=item.cost %}{{ title }}: {{ quantity }} x {{ price }} = {{ cost }} UAH{% endblocktranslate %}
 {% endfor %}
-Total: {{ order.total }} UAH
+{% blocktranslate with total=order.total %}Total: {{ total }} UAH{% endblocktranslate %}
 
-Delivery:
+{% translate "Delivery:" %}
 {{ order.full_name }}
 {{ order.phone }}
 {{ order.address }}
 
-Payment status: {{ order.get_payment_status_display }}.
-Order page: {{ order_url }}
+{% blocktranslate with status=order.get_payment_status_display %}Payment status: {{ status }}.{% endblocktranslate %}
+{% blocktranslate %}Order page: {{ order_url }}{% endblocktranslate %}
 
-Bookstore
+{% translate "Bookstore" %}
 {{ site_url }}
 {% endautoescape %}

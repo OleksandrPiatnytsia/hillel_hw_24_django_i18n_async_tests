@@ -1,0 +1,1459 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Bookstore\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-10 13:36+0000\n"
+"PO-Revision-Date: 2026-11-10 16:00+0200\n"
+"Last-Translator: Bookstore\n"
+"Language-Team: Ukrainian\n"
+"Language: uk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#: books/admin.py:28 books/models.py:43 books/models.py:140
+msgid "category"
+msgstr "категорія"
+
+#: books/admin.py:29 books/admin.py:155 books/models.py:44 books/models.py:87
+msgid "categories"
+msgstr "категорії"
+
+#: books/admin.py:37 books/models.py:99 books/models.py:139
+#: orders/models.py:189
+msgid "book"
+msgstr "книга"
+
+#: books/admin.py:38 books/admin.py:74 books/admin.py:90 books/models.py:100
+msgid "books"
+msgstr "книги"
+
+#: books/admin.py:47
+msgid "stock status"
+msgstr "наявність"
+
+#: books/admin.py:119
+msgid "Cover"
+msgstr "Обкладинка"
+
+#: books/admin.py:120
+msgid "Sales"
+msgstr "Продаж"
+
+#: books/admin.py:122 orders/admin.py:104
+msgid "Timestamps"
+msgstr "Дати"
+
+#: books/admin.py:147 books/models.py:84
+msgid "cover"
+msgstr "обкладинка"
+
+#: books/admin.py:151
+msgid "current cover"
+msgstr "поточна обкладинка"
+
+#: books/admin.py:159
+msgid "available"
+msgstr "у наявності"
+
+#: books/apps.py:8 orders/templates/orders/order_list.html:17
+msgid "Books"
+msgstr "Книги"
+
+#: books/forms.py:38
+msgid "New authors are added in the admin."
+msgstr "Нових авторів додають в адмінці."
+
+#: books/forms.py:41
+#, python-brace-format
+msgid ""
+"JPG, PNG or WebP, up to {size} MB. Without a cover a placeholder is shown."
+msgstr "JPG, PNG або WebP, до {size} МБ. Без обкладинки показується заглушка."
+
+#: books/forms.py:74
+msgid "— Choose an author —"
+msgstr "— Виберіть автора —"
+
+#: books/forms.py:82
+msgid "Only users with the “manage stock” permission can change it."
+msgstr "Змінювати можуть лише користувачі з правом «керування залишками»."
+
+#: books/forms.py:95
+#, python-format
+msgid "The file is %(size).1f MB, the limit is %(limit)s MB."
+msgstr "Файл має %(size).1f МБ, а максимум — %(limit)s МБ."
+
+#: books/forms.py:105
+msgid "Title A→Z"
+msgstr "Назва А→Я"
+
+#: books/forms.py:106
+msgid "Title Z→A"
+msgstr "Назва Я→А"
+
+#: books/forms.py:107
+msgid "Author A→Z"
+msgstr "Автор А→Я"
+
+#: books/forms.py:108
+msgid "Price: low to high"
+msgstr "Ціна: від дешевших"
+
+#: books/forms.py:109
+msgid "Price: high to low"
+msgstr "Ціна: від дорожчих"
+
+#: books/forms.py:110
+msgid "Newest first"
+msgstr "Спершу нові"
+
+#: books/forms.py:115 templates/includes/navbar.html:47
+#: templates/includes/navbar.html:48
+msgid "Search"
+msgstr "Пошук"
+
+#: books/forms.py:117 templates/includes/navbar.html:46
+msgid "Title or author"
+msgstr "Назва або автор"
+
+#: books/forms.py:124
+msgid "Category"
+msgstr "Категорія"
+
+#: books/forms.py:125
+msgid "All categories"
+msgstr "Усі категорії"
+
+#: books/forms.py:131
+msgid "Author"
+msgstr "Автор"
+
+#: books/forms.py:132
+msgid "All authors"
+msgstr "Усі автори"
+
+#: books/forms.py:136
+msgid "Any"
+msgstr "Будь-яка"
+
+#: books/forms.py:138
+msgid "Availability"
+msgstr "Наявність"
+
+#: books/forms.py:144
+msgid "Price from"
+msgstr "Ціна від"
+
+#: books/forms.py:150
+msgid "Price to"
+msgstr "Ціна до"
+
+#: books/forms.py:156
+msgid "Sort by"
+msgstr "Сортування"
+
+#: books/forms.py:165
+msgid "“Price from” can't be greater than “Price to”."
+msgstr "«Ціна від» не може бути більшою за «Ціна до»."
+
+#: books/models.py:18
+msgid "In stock"
+msgstr "Є в наявності"
+
+#: books/models.py:22
+#, python-brace-format
+msgid "Low (≤ {threshold})"
+msgstr "Мало (≤ {threshold})"
+
+#: books/models.py:23 books/templates/books/includes/stock_badge.html:4
+msgid "Out of stock"
+msgstr "Немає в наявності"
+
+#: books/models.py:38 books/models.py:52
+msgid "name"
+msgstr "назва"
+
+#: books/models.py:39
+msgid "slug"
+msgstr "слаг (у URL)"
+
+#: books/models.py:53
+msgid "biography"
+msgstr "біографія"
+
+#: books/models.py:57 books/models.py:71
+msgid "author"
+msgstr "автор"
+
+#: books/models.py:58
+msgid "authors"
+msgstr "автори"
+
+#: books/models.py:68 orders/models.py:198
+msgid "title"
+msgstr "назва"
+
+#: books/models.py:76 orders/models.py:200
+msgid "price"
+msgstr "ціна"
+
+#: books/models.py:81
+msgid "description"
+msgstr "опис"
+
+#: books/models.py:82
+msgid "stock"
+msgstr "залишок"
+
+#: books/models.py:92 orders/models.py:78 payments/models.py:63
+msgid "created at"
+msgstr "створено"
+
+#: books/models.py:93 orders/models.py:79 payments/models.py:64
+msgid "updated at"
+msgstr "оновлено"
+
+#: books/models.py:143
+msgid "book category"
+msgstr "категорія книги"
+
+#: books/models.py:144
+msgid "book categories"
+msgstr "категорії книг"
+
+#: books/templates/books/author_detail.html:7
+#: books/templates/books/book_detail.html:7
+#: books/templates/books/book_form.html:13
+#: orders/templates/orders/checkout.html:7
+#: orders/templates/orders/order_detail.html:7
+#: users/templates/users/profile_edit.html:9
+msgid "Breadcrumb"
+msgstr "Навігаційний ланцюжок"
+
+#: books/templates/books/author_detail.html:9
+#: books/templates/books/author_list.html:4
+#: books/templates/books/author_list.html:8 templates/includes/navbar.html:26
+msgid "Authors"
+msgstr "Автори"
+
+#: books/templates/books/author_detail.html:20
+msgid "Edit in admin"
+msgstr "Редагувати в адмінці"
+
+#: books/templates/books/author_detail.html:26
+msgid "No biography yet."
+msgstr "Біографії поки немає."
+
+#: books/templates/books/author_detail.html:32
+#, python-format
+msgid "Books (%(count)s)"
+msgstr "Книги (%(count)s)"
+
+#: books/templates/books/author_detail.html:35
+msgid "Open in catalog"
+msgstr "Відкрити в каталозі"
+
+#: books/templates/books/author_detail.html:59
+msgid "This author has no books yet."
+msgstr "У цього автора поки немає книг."
+
+#: books/templates/books/author_list.html:11
+msgid "Add author (admin)"
+msgstr "Додати автора (адмінка)"
+
+#: books/templates/books/author_list.html:23
+#, python-format
+msgid "%(count)s book"
+msgid_plural "%(count)s books"
+msgstr[0] "%(count)s книга"
+msgstr[1] "%(count)s книги"
+msgstr[2] "%(count)s книг"
+msgstr[3] "%(count)s книги"
+
+#: books/templates/books/author_list.html:31
+msgid "No authors yet."
+msgstr "Авторів поки немає."
+
+#: books/templates/books/book_confirm_delete.html:4
+#, python-format
+msgid "Delete “%(title)s”"
+msgstr "Видалити «%(title)s»"
+
+#: books/templates/books/book_confirm_delete.html:10
+msgid "Delete book"
+msgstr "Видалення книги"
+
+#: books/templates/books/book_confirm_delete.html:12
+msgid "Are you sure you want to delete this book?"
+msgstr "Ви точно хочете видалити цю книгу?"
+
+#: books/templates/books/book_confirm_delete.html:16
+msgid "Its category links will be removed too. Categories themselves stay."
+msgstr ""
+"Її зв'язки з категоріями теж буде видалено. Самі категорії залишаться."
+
+#: books/templates/books/book_confirm_delete.html:23
+msgid "Yes, delete"
+msgstr "Так, видалити"
+
+#: books/templates/books/book_confirm_delete.html:24
+#: books/templates/books/book_form.html:80
+#: users/templates/users/profile_edit.html:35
+msgid "Cancel"
+msgstr "Скасувати"
+
+#: books/templates/books/book_detail.html:9
+#: books/templates/books/book_form.html:15
+#: books/templates/books/book_list.html:4
+#: books/templates/books/book_list.html:8 templates/includes/navbar.html:20
+msgid "Catalog"
+msgstr "Каталог"
+
+#: books/templates/books/book_detail.html:18
+#, python-format
+msgid "Cover of %(title)s"
+msgstr "Обкладинка «%(title)s»"
+
+#: books/templates/books/book_detail.html:39
+#: cart/templates/cart/cart_detail.html:18
+#: orders/templates/orders/order_detail.html:32
+msgid "Quantity"
+msgstr "Кількість"
+
+#: books/templates/books/book_detail.html:40
+#: books/templates/books/book_list.html:111
+msgid "Add to cart"
+msgstr "У кошик"
+
+#: books/templates/books/book_detail.html:46
+#, python-format
+msgid "In your <a href=\"%(cart_url)s\">cart</a>: %(in_cart)s"
+msgstr "У вашому <a href=\"%(cart_url)s\">кошику</a>: %(in_cart)s"
+
+#: books/templates/books/book_detail.html:60
+msgid "No description yet."
+msgstr "Опису поки немає."
+
+#: books/templates/books/book_detail.html:65
+#, python-format
+msgid "Added %(added)s · updated %(updated)s"
+msgstr "Додано %(added)s · оновлено %(updated)s"
+
+#: books/templates/books/book_detail.html:72 templates/403.html:27
+#: templates/404.html:20
+msgid "Back to catalog"
+msgstr "До каталогу"
+
+#: books/templates/books/book_detail.html:76
+#: books/templates/books/book_form.html:18
+#: users/templates/users/profile.html:49
+#: users/templates/users/profile_edit.html:12
+msgid "Edit"
+msgstr "Редагувати"
+
+#: books/templates/books/book_detail.html:79
+msgid "Delete"
+msgstr "Видалити"
+
+#: books/templates/books/book_form.html:10
+#, python-format
+msgid "Edit “%(title)s”"
+msgstr "Редагування «%(title)s»"
+
+#: books/templates/books/book_form.html:10
+#: books/templates/books/book_form.html:20
+#: books/templates/books/book_form.html:29
+#: books/templates/books/book_list.html:11 templates/includes/navbar.html:32
+msgid "Add book"
+msgstr "Додати книгу"
+
+#: books/templates/books/book_form.html:29
+msgid "Edit book"
+msgstr "Редагування книги"
+
+#: books/templates/books/book_form.html:76
+msgid "Save changes"
+msgstr "Зберегти зміни"
+
+#: books/templates/books/book_form.html:76
+msgid "Create book"
+msgstr "Створити книгу"
+
+#: books/templates/books/book_list.html:20
+msgid "Filters"
+msgstr "Фільтри"
+
+#: books/templates/books/book_list.html:44
+msgid "Apply"
+msgstr "Застосувати"
+
+#: books/templates/books/book_list.html:46
+msgid "Reset"
+msgstr "Скинути"
+
+#: books/templates/books/book_list.html:58
+#, python-format
+msgid "Found: %(count)s book"
+msgid_plural "Found: %(count)s books"
+msgstr[0] "Знайдено: %(count)s книга"
+msgstr[1] "Знайдено: %(count)s книги"
+msgstr[2] "Знайдено: %(count)s книг"
+msgstr[3] "Знайдено: %(count)s книги"
+
+#: books/templates/books/book_list.html:64
+#, python-format
+msgid "· page %(number)s of %(pages)s"
+msgstr "· сторінка %(number)s з %(pages)s"
+
+#: books/templates/books/book_list.html:119
+msgid "No books match these filters."
+msgstr "За цими фільтрами книг не знайдено."
+
+#: books/templates/books/book_list.html:120
+msgid "Show all books"
+msgstr "Показати всі книги"
+
+#: books/templates/books/includes/stock_badge.html:7
+#, python-format
+msgid "Only %(stock)s copy left"
+msgid_plural "Only %(stock)s copies left"
+msgstr[0] "Залишився %(stock)s примірник"
+msgstr[1] "Залишилося %(stock)s примірники"
+msgstr[2] "Залишилося %(stock)s примірників"
+msgstr[3] "Залишилося %(stock)s примірника"
+
+#: books/templates/books/includes/stock_badge.html:13
+#, python-format
+msgid "In stock: %(stock)s"
+msgstr "У наявності: %(stock)s"
+
+#: books/templates/books/widgets/cover_input.html:13
+#: books/templates/books/widgets/cover_input.html:16
+msgid "Current cover"
+msgstr "Поточна обкладинка"
+
+#: books/templates/books/widgets/cover_input.html:23
+msgid "Remove cover"
+msgstr "Видалити обкладинку"
+
+#: books/templates/books/widgets/cover_input.html:28
+msgid "Upload a new one to replace it:"
+msgstr "Завантажте нову, щоб замінити:"
+
+#: books/views.py:141
+#, python-format
+msgid "Book “%(title)s” was created."
+msgstr "Книгу «%(title)s» створено."
+
+#: books/views.py:163
+#, python-format
+msgid "Book “%(title)s” was updated."
+msgstr "Книгу «%(title)s» оновлено."
+
+#: books/views.py:206
+#, python-format
+msgid "Book “%(title)s” was deleted."
+msgstr "Книгу «%(title)s» видалено."
+
+#: cart/apps.py:8 cart/templates/cart/cart_detail.html:4
+#: cart/templates/cart/cart_detail.html:7
+#: orders/templates/orders/checkout.html:9 templates/includes/navbar.html:82
+msgid "Cart"
+msgstr "Кошик"
+
+#: cart/templates/cart/cart_detail.html:16
+#: orders/templates/orders/emails/order_created.html:30
+#: orders/templates/orders/order_detail.html:30
+msgid "Book"
+msgstr "Книга"
+
+#: cart/templates/cart/cart_detail.html:17
+#: orders/templates/orders/emails/order_created.html:31
+#: orders/templates/orders/order_detail.html:31
+msgid "Price"
+msgstr "Ціна"
+
+#: cart/templates/cart/cart_detail.html:19
+#: orders/templates/orders/emails/order_created.html:33
+#: orders/templates/orders/order_detail.html:33
+msgid "Cost"
+msgstr "Вартість"
+
+#: cart/templates/cart/cart_detail.html:20
+msgid "Remove"
+msgstr "Прибрати"
+
+#: cart/templates/cart/cart_detail.html:37
+#: orders/templates/orders/checkout.html:82
+#, python-format
+msgid "Only %(stock)s copy left in stock"
+msgid_plural "Only %(stock)s copies left in stock"
+msgstr[0] "На складі лише %(stock)s примірник"
+msgstr[1] "На складі лише %(stock)s примірники"
+msgstr[2] "На складі лише %(stock)s примірників"
+msgstr[3] "На складі лише %(stock)s примірника"
+
+#: cart/templates/cart/cart_detail.html:41
+#: orders/templates/orders/checkout.html:86
+msgid "Out of stock now"
+msgstr "Зараз немає в наявності"
+
+#: cart/templates/cart/cart_detail.html:54
+#, python-format
+msgid "Quantity of %(title)s"
+msgstr "Кількість «%(title)s»"
+
+#: cart/templates/cart/cart_detail.html:55
+msgid "Update"
+msgstr "Оновити"
+
+#: cart/templates/cart/cart_detail.html:63
+#, python-format
+msgid "Remove %(title)s"
+msgstr "Прибрати «%(title)s»"
+
+#: cart/templates/cart/cart_detail.html:72
+#: orders/templates/orders/checkout.html:94
+#: orders/templates/orders/emails/order_created.html:44
+#: orders/templates/orders/order_detail.html:50
+#: orders/templates/orders/order_list.html:18
+msgid "Total"
+msgstr "Разом"
+
+#: cart/templates/cart/cart_detail.html:82
+msgid "Continue shopping"
+msgstr "Продовжити покупки"
+
+#: cart/templates/cart/cart_detail.html:85
+msgid "Clear cart"
+msgstr "Очистити кошик"
+
+#: cart/templates/cart/cart_detail.html:89
+#: orders/templates/orders/checkout.html:4
+#: orders/templates/orders/checkout.html:10
+#: orders/templates/orders/checkout.html:14
+msgid "Checkout"
+msgstr "Оформлення замовлення"
+
+#: cart/templates/cart/cart_detail.html:94 orders/services.py:50
+msgid "The cart is empty."
+msgstr "Кошик порожній."
+
+#: cart/templates/cart/cart_detail.html:95
+#: orders/templates/orders/order_list.html:45
+msgid "Go to the catalog"
+msgstr "Перейти до каталогу"
+
+#: cart/views.py:44
+msgid "Quantity must be a whole number, 1 or more."
+msgstr "Кількість має бути цілим числом, від 1."
+
+#: cart/views.py:54 orders/services.py:80
+#, python-format
+msgid "“%(title)s” is out of stock."
+msgstr "«%(title)s» немає в наявності."
+
+#: cart/views.py:59
+#, python-format
+msgid "“%(title)s”: %(quantity)s in the cart, that's all we have in stock."
+msgstr "«%(title)s»: у кошику %(quantity)s, це все, що є на складі."
+
+#: cart/views.py:65
+#, python-format
+msgid "“%(title)s”: %(quantity)s in the cart."
+msgstr "«%(title)s»: у кошику %(quantity)s."
+
+#: cart/views.py:74
+#, python-format
+msgid "“%(title)s” removed from the cart."
+msgstr "«%(title)s» прибрано з кошика."
+
+#: cart/views.py:81
+msgid "The cart is empty now."
+msgstr "Кошик тепер порожній."
+
+#: config/settings.py:238
+msgid "Ukrainian"
+msgstr "Українська"
+
+#: config/settings.py:239
+msgid "English"
+msgstr "Англійська"
+
+#: orders/admin.py:47
+msgid "cost"
+msgstr "вартість"
+
+#: orders/admin.py:92 payments/templates/payments/payment_success.html:4
+msgid "Payment"
+msgstr "Оплата"
+
+#: orders/admin.py:103 orders/templates/orders/checkout.html:22
+#: orders/templates/orders/emails/order_created.html:49
+#: orders/templates/orders/order_detail.html:62
+msgid "Delivery"
+msgstr "Доставка"
+
+#: orders/admin.py:150
+msgid "paid"
+msgstr "оплачено"
+
+#: orders/admin.py:156
+msgid "paid amount"
+msgstr "сплачено"
+
+#: orders/admin.py:158 orders/admin.py:162
+#, python-format
+msgid "%(amount)s UAH"
+msgstr "%(amount)s грн"
+
+#: orders/admin.py:160
+msgid "amount due"
+msgstr "до сплати"
+
+#: orders/admin.py:164
+msgid "paid, %"
+msgstr "оплачено, %"
+
+#: orders/admin.py:219
+#, python-format
+msgid "Manual payment %(amount)s UAH recorded, the order is %(status)s now."
+msgstr "Ручну оплату %(amount)s грн записано, замовлення тепер: %(status)s."
+
+#: orders/admin.py:238
+#, python-format
+msgid "%(order)s is cancelled, the books are back in stock."
+msgstr "%(order)s скасовано, книги повернено на склад."
+
+#: orders/admin.py:243
+#, python-format
+msgid "%(order)s has payments: return the money to the customer."
+msgstr "%(order)s має оплати: поверніть гроші покупцеві."
+
+#: orders/admin.py:248
+msgid "Cancel selected orders (books go back to stock)"
+msgstr "Скасувати вибрані замовлення (книги повертаються на склад)"
+
+#: orders/apps.py:8
+msgid "Orders"
+msgstr "Замовлення"
+
+#: orders/forms.py:24
+msgid "Save phone and address to my profile"
+msgstr "Зберегти телефон і адресу в моєму профілі"
+
+#: orders/forms.py:41 users/forms.py:61
+msgid "City, street, house, flat or the post office number"
+msgstr "Місто, вулиця, будинок, квартира або номер відділення пошти"
+
+#: orders/management/commands/cancel_unpaid_orders.py:64
+msgid "--older-than must be at least 30m."
+msgstr "--older-than має бути не менше 30m."
+
+#: orders/management/commands/cancel_unpaid_orders.py:81
+#, python-format
+msgid "would cancel %(order)s from %(date)s (%(total)s UAH)"
+msgstr "буде скасовано %(order)s від %(date)s (%(total)s грн)"
+
+#: orders/management/commands/cancel_unpaid_orders.py:87
+#, python-format
+msgid "%(count)s order, nothing changed (--dry-run)."
+msgid_plural "%(count)s orders, nothing changed (--dry-run)."
+msgstr[0] "%(count)s замовлення, нічого не змінено (--dry-run)."
+msgstr[1] "%(count)s замовлення, нічого не змінено (--dry-run)."
+msgstr[2] "%(count)s замовлень, нічого не змінено (--dry-run)."
+msgstr[3] "%(count)s замовлення, нічого не змінено (--dry-run)."
+
+#: orders/management/commands/cancel_unpaid_orders.py:104
+#, python-format
+msgid "skipped: %(error)s"
+msgstr "пропущено: %(error)s"
+
+#: orders/management/commands/cancel_unpaid_orders.py:107
+#, python-format
+msgid "cancelled: order #%(number)s"
+msgstr "скасовано: замовлення #%(number)s"
+
+#: orders/management/commands/cancel_unpaid_orders.py:113
+#, python-format
+msgid "Cancelled: %(cancelled)s, skipped: %(skipped)s."
+msgstr "Скасовано: %(cancelled)s, пропущено: %(skipped)s."
+
+#: orders/models.py:27
+msgid "New"
+msgstr "Нове"
+
+#: orders/models.py:28
+msgid "Processing"
+msgstr "Обробляється"
+
+#: orders/models.py:29
+msgid "Shipped"
+msgstr "Відправлено"
+
+#: orders/models.py:30
+msgid "Completed"
+msgstr "Виконано"
+
+#: orders/models.py:31
+msgid "Cancelled"
+msgstr "Скасовано"
+
+#: orders/models.py:34
+msgid "Unpaid"
+msgstr "Не оплачено"
+
+#: orders/models.py:35
+msgid "Partially paid"
+msgstr "Частково оплачено"
+
+#: orders/models.py:36 orders/templates/orders/order_detail.html:79
+#: payments/templates/payments/emails/payment_received.html:29
+msgid "Paid"
+msgstr "Оплачено"
+
+#: orders/models.py:40
+msgid "user"
+msgstr "користувач"
+
+#: orders/models.py:47 payments/models.py:54
+msgid "status"
+msgstr "статус"
+
+#: orders/models.py:57
+msgid "payment status"
+msgstr "статус оплати"
+
+#: orders/models.py:65
+msgid "full name"
+msgstr "ім'я та прізвище"
+
+#: orders/models.py:66 users/models.py:34
+msgid "phone"
+msgstr "телефон"
+
+#: orders/models.py:67 users/models.py:35
+msgid "delivery address"
+msgstr "адреса доставки"
+
+#: orders/models.py:72
+msgid "total"
+msgstr "сума"
+
+#: orders/models.py:83 orders/models.py:182 payments/models.py:34
+msgid "order"
+msgstr "замовлення"
+
+#: orders/models.py:84
+msgid "orders"
+msgstr "замовлення"
+
+#: orders/models.py:97
+#, python-format
+msgid "Order #%(number)s"
+msgstr "Замовлення #%(number)s"
+
+#: orders/models.py:206
+msgid "quantity"
+msgstr "кількість"
+
+#: orders/models.py:212
+msgid "order item"
+msgstr "позиція замовлення"
+
+#: orders/models.py:213
+msgid "order items"
+msgstr "позиції замовлення"
+
+#: orders/services.py:77
+msgid "A book from your cart is no longer sold."
+msgstr "Однієї з книг з вашого кошика більше немає в продажу."
+
+#: orders/services.py:87
+#, python-format
+msgid "“%(title)s”: only %(stock)s copy left, you ordered %(quantity)s."
+msgid_plural ""
+"“%(title)s”: only %(stock)s copies left, you ordered %(quantity)s."
+msgstr[0] ""
+"«%(title)s»: залишився лише %(stock)s примірник, а ви замовили %(quantity)s."
+msgstr[1] ""
+"«%(title)s»: залишилося лише %(stock)s примірники, а ви замовили "
+"%(quantity)s."
+msgstr[2] ""
+"«%(title)s»: залишилося лише %(stock)s примірників, а ви замовили "
+"%(quantity)s."
+msgstr[3] ""
+"«%(title)s»: залишилося лише %(stock)s примірника, а ви замовили "
+"%(quantity)s."
+
+#: orders/services.py:164 payments/services.py:191
+msgid "Order not found."
+msgstr "Замовлення не знайдено."
+
+#: orders/services.py:166
+#, python-format
+msgid "%(order)s can't be cancelled any more."
+msgstr "%(order)s вже не можна скасувати."
+
+#: orders/services.py:168
+#, python-format
+msgid "%(order)s is already cancelled."
+msgstr "%(order)s уже скасовано."
+
+#: orders/services.py:173
+#, python-format
+msgid "%(order)s is not a new unpaid order any more."
+msgstr "%(order)s уже не є новим неоплаченим замовленням."
+
+#: orders/templates/orders/checkout.html:47
+#, python-format
+msgid ""
+"Next time they'll be filled in for you. You can also change them on <a "
+"href=\"%(profile_url)s\">your profile</a>."
+msgstr ""
+"Наступного разу їх буде заповнено автоматично. Змінити їх можна також у <a "
+"href=\"%(profile_url)s\">профілі</a>."
+
+#: orders/templates/orders/checkout.html:55
+#: users/templates/users/profile.html:14
+msgid "Email"
+msgstr "Email"
+
+#: orders/templates/orders/checkout.html:58
+msgid "Order emails go to this address (from your profile)."
+msgstr "Листи про замовлення надходять на цю адресу (з вашого профілю)."
+
+#: orders/templates/orders/checkout.html:62
+#, python-format
+msgid "Place order · %(total)s ₴"
+msgstr "Оформити замовлення · %(total)s ₴"
+
+#: orders/templates/orders/checkout.html:72
+msgid "Your order"
+msgstr "Ваше замовлення"
+
+#: orders/templates/orders/checkout.html:99
+msgid ""
+"The books are reserved when you place the order. Then you pay with the “Pay”"
+" button on the order page."
+msgstr ""
+"Книги резервуються, щойно ви оформите замовлення. Потім ви оплачуєте його "
+"кнопкою «Оплатити» на сторінці замовлення."
+
+#: orders/templates/orders/emails/order_created.html:18
+#: orders/templates/orders/emails/order_created.html:66
+#: orders/templates/orders/emails/order_created.txt:18
+#: payments/templates/payments/emails/payment_received.html:16
+#: payments/templates/payments/emails/payment_received.html:60
+#: payments/templates/payments/emails/payment_received.txt:12
+#: templates/base.html:9 templates/includes/navbar.html:7
+msgid "Bookstore"
+msgstr "Книгарня"
+
+#: orders/templates/orders/emails/order_created.html:19
+#: orders/templates/orders/emails/order_created.txt:2
+#: payments/templates/payments/emails/payment_received.html:17
+#: payments/templates/payments/emails/payment_received.txt:2
+#, python-format
+msgid "Hello, %(name)s!"
+msgstr "Вітаємо, %(name)s!"
+
+#: orders/templates/orders/emails/order_created.html:19
+#: orders/templates/orders/emails/order_created.txt:2
+#: payments/templates/payments/emails/payment_received.html:17
+#: payments/templates/payments/emails/payment_received.txt:2
+msgid "Hello!"
+msgstr "Вітаємо!"
+
+#: orders/templates/orders/emails/order_created.html:21
+#, python-format
+msgid ""
+"Thank you for your order. <strong>%(order)s</strong> is created, the books "
+"are reserved for you."
+msgstr ""
+"Дякуємо за замовлення. <strong>%(order)s</strong> створено, книги "
+"зарезервовано для вас."
+
+#: orders/templates/orders/emails/order_created.html:32
+msgid "Qty"
+msgstr "К-сть"
+
+#: orders/templates/orders/emails/order_created.html:56
+#, python-format
+msgid "Payment status: <strong>%(status)s</strong>"
+msgstr "Статус оплати: <strong>%(status)s</strong>"
+
+#: orders/templates/orders/emails/order_created.html:60
+#: payments/templates/payments/emails/payment_received.html:54
+msgid "Open the order"
+msgstr "Відкрити замовлення"
+
+#: orders/templates/orders/emails/order_created.txt:4
+#, python-format
+msgid ""
+"Thank you for your order. %(order)s is created, the books are reserved for "
+"you."
+msgstr ""
+"Дякуємо за замовлення. %(order)s створено, книги зарезервовано для вас."
+
+#: orders/templates/orders/emails/order_created.txt:6
+#, python-format
+msgid "%(title)s: %(quantity)s x %(price)s = %(cost)s UAH"
+msgstr "%(title)s: %(quantity)s x %(price)s = %(cost)s грн"
+
+#: orders/templates/orders/emails/order_created.txt:8
+#, python-format
+msgid "Total: %(total)s UAH"
+msgstr "Разом: %(total)s грн"
+
+#: orders/templates/orders/emails/order_created.txt:10
+msgid "Delivery:"
+msgstr "Доставка:"
+
+#: orders/templates/orders/emails/order_created.txt:15
+#, python-format
+msgid "Payment status: %(status)s."
+msgstr "Статус оплати: %(status)s."
+
+#: orders/templates/orders/emails/order_created.txt:16
+#: payments/templates/payments/emails/payment_received.txt:10
+#, python-format
+msgid "Order page: %(order_url)s"
+msgstr "Сторінка замовлення: %(order_url)s"
+
+#: orders/templates/orders/emails/order_created_subject.txt:2
+#, python-format
+msgid "Bookstore: %(order)s is created (%(total)s UAH)"
+msgstr "Книгарня: %(order)s створено (%(total)s грн)"
+
+#: orders/templates/orders/order_detail.html:9
+#: orders/templates/orders/order_list.html:4
+#: orders/templates/orders/order_list.html:7 templates/includes/navbar.html:99
+msgid "My orders"
+msgstr "Мої замовлення"
+
+#: orders/templates/orders/order_detail.html:69
+#, python-format
+msgid "Created %(date)s"
+msgstr "Створено %(date)s"
+
+#: orders/templates/orders/order_detail.html:75
+#, python-format
+msgid "Paid %(paid)s of %(total)s ₴ (%(percent)s%%)"
+msgstr "Сплачено %(paid)s з %(total)s ₴ (%(percent)s%%)"
+
+#: orders/templates/orders/order_detail.html:91
+#, python-format
+msgid "Pay %(due)s ₴"
+msgstr "Оплатити %(due)s ₴"
+
+#: orders/templates/orders/order_detail.html:93
+msgid "Card payment on the Stripe page"
+msgstr "Оплата карткою на сторінці Stripe"
+
+#: orders/templates/orders/order_detail.html:101
+#, python-format
+msgid "Cancel %(order)s? The books will go back to stock."
+msgstr "%(order)s: скасувати? Книги повернуться на склад."
+
+#: orders/templates/orders/order_detail.html:105
+msgid "Cancel order"
+msgstr "Скасувати замовлення"
+
+#: orders/templates/orders/order_list.html:15
+msgid "Order"
+msgstr "Замовлення"
+
+#: orders/templates/orders/order_list.html:16
+msgid "Date"
+msgstr "Дата"
+
+#: orders/templates/orders/order_list.html:19
+#: users/templates/users/profile.html:20
+msgid "Status"
+msgstr "Статус"
+
+#: orders/templates/orders/order_list.html:44
+msgid "You have no orders yet."
+msgstr "У вас поки немає замовлень."
+
+#: orders/views.py:29
+msgid "Your cart is empty."
+msgstr "Ваш кошик порожній."
+
+#: orders/views.py:63
+#, python-format
+msgid ""
+"%(order)s is created, the books are reserved for you. Pay for it with the "
+"“Pay” button."
+msgstr ""
+"%(order)s створено, книги зарезервовано для вас. Оплатіть його кнопкою "
+"«Оплатити»."
+
+#: orders/views.py:134
+#, python-format
+msgid "%(order)s is cancelled. The books are back in stock."
+msgstr "%(order)s скасовано. Книги повернено на склад."
+
+#: payments/admin.py:27 payments/models.py:71
+msgid "payments"
+msgstr "оплати"
+
+#: payments/admin.py:39 payments/admin.py:48
+msgid "note"
+msgstr "примітка"
+
+#: payments/admin.py:51
+msgid "cash on delivery, bank transfer #…"
+msgstr "готівка при отриманні, банківський переказ №…"
+
+#: payments/admin.py:73
+msgid "The order is cancelled, payments can't be added."
+msgstr "Замовлення скасовано, додавати оплати не можна."
+
+#: payments/admin.py:77
+#, python-format
+msgid "Only %(due)s UAH is due, the new payments add up to %(sum)s UAH."
+msgstr "До сплати лише %(due)s грн, а нові оплати разом дають %(sum)s грн."
+
+#: payments/admin.py:97
+msgid "manual payment"
+msgstr "ручна оплата"
+
+#: payments/admin.py:98
+msgid "add a manual payment (money received outside the site)"
+msgstr "додати ручну оплату (гроші отримано поза сайтом)"
+
+#: payments/apps.py:8
+msgid "Payments"
+msgstr "Оплати"
+
+#: payments/models.py:24
+msgid "Manual"
+msgstr "Вручну"
+
+#: payments/models.py:27
+msgid "Pending"
+msgstr "Очікує"
+
+#: payments/models.py:28
+msgid "Succeeded"
+msgstr "Успішний"
+
+#: payments/models.py:29
+msgid "Failed"
+msgstr "Невдалий"
+
+#: payments/models.py:30
+msgid "Expired"
+msgstr "Прострочений"
+
+#: payments/models.py:40
+msgid "provider"
+msgstr "провайдер"
+
+#: payments/models.py:44
+msgid "provider's id"
+msgstr "ідентифікатор у провайдера"
+
+#: payments/models.py:48
+msgid "amount"
+msgstr "сума"
+
+#: payments/models.py:62
+msgid "details"
+msgstr "деталі"
+
+#: payments/models.py:66
+msgid "paid at"
+msgstr "оплачено о"
+
+#: payments/models.py:70
+msgid "payment"
+msgstr "оплата"
+
+#: payments/models.py:90
+#, python-format
+msgid "%(provider)s %(amount)s UAH (%(status)s) for order #%(order)s"
+msgstr "%(provider)s %(amount)s грн (%(status)s), замовлення #%(order)s"
+
+#: payments/providers/base.py:51
+#, python-format
+msgid "%(provider)s: online payment is not supported."
+msgstr "%(provider)s: онлайн-оплата не підтримується."
+
+#: payments/providers/base.py:75
+#, python-format
+msgid "%(provider)s: webhooks are not supported."
+msgstr "%(provider)s: вебхуки не підтримуються."
+
+#: payments/providers/stripe_checkout.py:56
+msgid "Online payment is not configured."
+msgstr "Онлайн-оплату не налаштовано."
+
+#: payments/providers/stripe_checkout.py:82
+#, python-format
+msgid "Bookstore: order #%(number)s"
+msgstr "Книгарня: замовлення #%(number)s"
+
+#: payments/providers/stripe_checkout.py:118
+msgid "The payment service is not available now, please try again later."
+msgstr "Платіжний сервіс зараз недоступний, спробуйте пізніше."
+
+#: payments/providers/stripe_checkout.py:137
+msgid "Can't check the payment now."
+msgstr "Зараз не вдається перевірити оплату."
+
+#: payments/providers/stripe_checkout.py:155
+msgid "Can't close the payment page now."
+msgstr "Зараз не вдається закрити сторінку оплати."
+
+#: payments/services.py:49
+msgid "The amount must be greater than 0."
+msgstr "Сума має бути більшою за 0."
+
+#: payments/services.py:54
+#, python-format
+msgid "%(order)s is cancelled, payments can't be added."
+msgstr "%(order)s скасовано, додавати оплати не можна."
+
+#: payments/services.py:58
+#, python-format
+msgid "%(order)s: only %(due)s UAH is due, %(amount)s UAH is too much."
+msgstr "%(order)s: до сплати лише %(due)s грн, %(amount)s грн — забагато."
+
+#: payments/services.py:193
+#, python-format
+msgid "%(order)s is cancelled."
+msgstr "%(order)s скасовано."
+
+#: payments/services.py:196
+#, python-format
+msgid "%(order)s is already paid."
+msgstr "%(order)s уже оплачено."
+
+#: payments/services.py:208
+msgid "The payment is being prepared, please try again in a minute."
+msgstr "Оплата готується, спробуйте ще раз за хвилину."
+
+#: payments/templates/payments/emails/payment_received.html:19
+#, python-format
+msgid ""
+"We received your payment of <strong>%(amount)s ₴</strong> for "
+"<strong>%(order)s</strong>."
+msgstr ""
+"<strong>%(order)s</strong>: ми отримали вашу оплату <strong>%(amount)s "
+"₴</strong>."
+
+#: payments/templates/payments/emails/payment_received.html:25
+msgid "Order total"
+msgstr "Сума замовлення"
+
+#: payments/templates/payments/emails/payment_received.html:34
+msgid "Still due"
+msgstr "Залишилось сплатити"
+
+#: payments/templates/payments/emails/payment_received.html:42
+msgid ""
+"The order is <strong>fully paid</strong>. We'll let you know when it's "
+"shipped."
+msgstr ""
+"Замовлення <strong>повністю оплачено</strong>. Ми повідомимо, коли його буде"
+" відправлено."
+
+#: payments/templates/payments/emails/payment_received.html:46
+#, python-format
+msgid "The order is <strong>%(status)s</strong>."
+msgstr "Замовлення: <strong>%(status)s</strong>."
+
+#: payments/templates/payments/emails/payment_received.txt:4
+#, python-format
+msgid "We received your payment of %(amount)s UAH for %(order)s."
+msgstr "%(order)s: ми отримали вашу оплату %(amount)s грн."
+
+#: payments/templates/payments/emails/payment_received.txt:6
+#, python-format
+msgid "Order total: %(total)s UAH"
+msgstr "Сума замовлення: %(total)s грн"
+
+#: payments/templates/payments/emails/payment_received.txt:7
+#, python-format
+msgid "Paid: %(paid)s UAH (%(percent)s%%)"
+msgstr "Сплачено: %(paid)s грн (%(percent)s%%)"
+
+#: payments/templates/payments/emails/payment_received.txt:8
+msgid "The order is fully paid. We'll let you know when it's shipped."
+msgstr ""
+"Замовлення повністю оплачено. Ми повідомимо, коли його буде відправлено."
+
+#: payments/templates/payments/emails/payment_received.txt:8
+#, python-format
+msgid "Still due: %(due)s UAH."
+msgstr "Залишилось сплатити: %(due)s грн."
+
+#: payments/templates/payments/emails/payment_received_subject.txt:2
+#, python-format
+msgid "Bookstore: payment for %(order)s received (%(amount)s UAH)"
+msgstr "Книгарня: %(order)s — оплату отримано (%(amount)s грн)"
+
+#: payments/templates/payments/payment_success.html:10
+msgid "Thank you, the payment is received"
+msgstr "Дякуємо, оплату отримано"
+
+#: payments/templates/payments/payment_success.html:12
+#, python-format
+msgid "%(amount)s ₴ for %(order)s."
+msgstr "%(order)s: %(amount)s ₴."
+
+#: payments/templates/payments/payment_success.html:13
+msgid "The order is fully paid."
+msgstr "Замовлення повністю оплачено."
+
+#: payments/templates/payments/payment_success.html:18
+msgid "The payment is being confirmed"
+msgstr "Оплата підтверджується"
+
+#: payments/templates/payments/payment_success.html:20
+msgid "It usually takes a few seconds. The order page will show the result."
+msgstr ""
+"Зазвичай це займає кілька секунд. Результат буде видно на сторінці "
+"замовлення."
+
+#: payments/templates/payments/payment_success.html:24
+msgid "The payment didn't go through"
+msgstr "Оплата не пройшла"
+
+#: payments/templates/payments/payment_success.html:25
+msgid "You can try again from the order page."
+msgstr "Спробуйте ще раз зі сторінки замовлення."
+
+#: payments/templates/payments/payment_success.html:27
+#, python-format
+msgid "Open %(order)s"
+msgstr "Відкрити: %(order)s"
+
+#: payments/views.py:58
+msgid ""
+"The payment was not completed. You can pay later with the “Pay” button."
+msgstr "Оплату не завершено. Оплатити можна пізніше кнопкою «Оплатити»."
+
+#: templates/403.html:10 templates/403.html:15
+msgid "Access denied"
+msgstr "Доступ заборонено"
+
+#: templates/403.html:17
+msgid "You don't have permission to open this page."
+msgstr "У вас немає прав відкривати цю сторінку."
+
+#: templates/403.html:22
+#, python-format
+msgid ""
+"Your groups and permissions are listed on <a href=\"%(profile_url)s\">your "
+"profile</a>."
+msgstr "Ваші групи й права наведено у <a href=\"%(profile_url)s\">профілі</a>."
+
+#: templates/404.html:11 templates/404.html:16
+msgid "Page not found"
+msgstr "Сторінку не знайдено"
+
+#: templates/404.html:18
+msgid "The page doesn't exist or isn't available to you."
+msgstr "Сторінки не існує або вона вам недоступна."
+
+#: templates/base.html:30
+msgid "Bookstore · Hillel Django homework"
+msgstr "Книгарня · домашнє завдання Hillel з Django"
+
+#: templates/includes/messages.html:8
+msgid "Close"
+msgstr "Закрити"
+
+#: templates/includes/navbar.html:11
+msgid "Toggle navigation"
+msgstr "Показати або сховати меню"
+
+#: templates/includes/navbar.html:38
+msgid "Admin"
+msgstr "Адмінка"
+
+#: templates/includes/navbar.html:61 users/admin.py:21
+#: users/templates/users/profile.html:41
+msgid "Language"
+msgstr "Мова"
+
+#: templates/includes/navbar.html:98 users/templates/users/profile.html:4
+#: users/templates/users/profile_edit.html:11
+msgid "My profile"
+msgstr "Мій профіль"
+
+#: templates/includes/navbar.html:106
+msgid "Log out"
+msgstr "Вийти"
+
+#: templates/includes/navbar.html:115 users/templates/users/auth_form.html:54
+#: users/views.py:40
+msgid "Log in"
+msgstr "Увійти"
+
+#: templates/includes/navbar.html:119 users/templates/users/auth_form.html:52
+#: users/views.py:72
+msgid "Sign up"
+msgstr "Зареєструватися"
+
+#: templates/includes/pagination.html:11
+msgid "Pages"
+msgstr "Сторінки"
+
+#: templates/includes/pagination.html:17
+msgid "Previous"
+msgstr "Попередня"
+
+#: templates/includes/pagination.html:40
+msgid "Next"
+msgstr "Наступна"
+
+#: users/admin.py:20 users/templates/users/profile.html:48
+#: users/templates/users/profile_edit.html:18
+msgid "Delivery details"
+msgstr "Дані доставки"
+
+#: users/apps.py:8
+msgid "Users"
+msgstr "Користувачі"
+
+#: users/models.py:25
+msgid "email address"
+msgstr "адреса email"
+
+#: users/models.py:27
+msgid "A user with this email already exists."
+msgstr "Користувач з таким email уже існує."
+
+#: users/models.py:42
+msgid "language"
+msgstr "мова"
+
+#: users/models.py:46
+msgid "Language of the site and of the emails."
+msgstr "Мова сайту й листів."
+
+#: users/phone.py:19
+msgid "Enter a phone number: 10–15 digits, e.g. +380 67 123 45 67."
+msgstr "Введіть номер телефону: 10–15 цифр, наприклад +380 67 123 45 67."
+
+#: users/templates/users/auth_form.html:52
+msgid "No account yet?"
+msgstr "Ще немає акаунта?"
+
+#: users/templates/users/auth_form.html:54
+msgid "Already have an account?"
+msgstr "Уже маєте акаунт?"
+
+#: users/templates/users/profile.html:17
+msgid "Joined"
+msgstr "Зареєстровано"
+
+#: users/templates/users/profile.html:23
+msgid "superuser"
+msgstr "суперкористувач"
+
+#: users/templates/users/profile.html:23
+msgid "has every permission"
+msgstr "має всі права"
+
+#: users/templates/users/profile.html:25
+msgid "staff"
+msgstr "персонал"
+
+#: users/templates/users/profile.html:25
+msgid "can open the admin"
+msgstr "може відкривати адмінку"
+
+#: users/templates/users/profile.html:27
+msgid "regular user"
+msgstr "звичайний користувач"
+
+#: users/templates/users/profile.html:31
+msgid "Groups"
+msgstr "Групи"
+
+#: users/templates/users/profile.html:36 users/templates/users/profile.html:81
+msgid "none"
+msgstr "немає"
+
+#: users/templates/users/profile.html:53
+msgid "Name"
+msgstr "Ім'я"
+
+#: users/templates/users/profile.html:56
+msgid "Phone"
+msgstr "Телефон"
+
+#: users/templates/users/profile.html:59
+msgid "Address"
+msgstr "Адреса"
+
+#: users/templates/users/profile.html:66
+msgid "What you can do in the catalog"
+msgstr "Що ви можете в каталозі"
+
+#: users/templates/users/profile.html:69
+msgid "add books"
+msgstr "додавати книги"
+
+#: users/templates/users/profile.html:70
+msgid "edit books"
+msgstr "редагувати книги"
+
+#: users/templates/users/profile.html:71
+msgid "change stock"
+msgstr "змінювати залишки"
+
+#: users/templates/users/profile.html:72
+msgid "delete books"
+msgstr "видаляти книги"
+
+#: users/templates/users/profile.html:76
+#, python-format
+msgid "All permissions (%(count)s)"
+msgstr "Усі права (%(count)s)"
+
+#: users/templates/users/profile_edit.html:4
+msgid "Edit profile"
+msgstr "Редагування профілю"
+
+#: users/templates/users/profile_edit.html:19
+msgid "Filled in for you at checkout."
+msgstr "Підставляються автоматично під час оформлення замовлення."
+
+#: users/templates/users/profile_edit.html:34
+msgid "Save"
+msgstr "Зберегти"
+
+#: users/views.py:39
+#, python-format
+msgid "Welcome back, %(username)s!"
+msgstr "З поверненням, %(username)s!"
+
+#: users/views.py:62
+msgid "You have been logged out."
+msgstr "Ви вийшли з акаунта."
+
+#: users/views.py:71
+#, python-format
+msgid "Account created. Welcome, %(username)s!"
+msgstr "Акаунт створено. Вітаємо, %(username)s!"
+
+#: users/views.py:72
+msgid "Create account"
+msgstr "Створити акаунт"
+
+#: users/views.py:150
+msgid "Your profile is saved."
+msgstr "Профіль збережено."

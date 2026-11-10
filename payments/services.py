@@ -76,7 +76,7 @@ def record_manual_payment(order_id, amount, *, note="", recorded_by=None):
             # One email when the order is fully paid, not one per part
             transaction.on_commit(partial(send_payment_received_email, payment.pk))
 
-    logger.info("Manual payment %s UAH for %s recorded (%s)", amount, order, order.payment_status)
+    logger.info("Manual payment %s UAH for order #%s recorded (%s)", amount, order.pk, order.payment_status)
     return payment
 
 
@@ -120,9 +120,9 @@ def mark_payment_succeeded(payment_id, *, details=None):
             # Paid after the order was cancelled (e.g. cancel_unpaid_orders
             # ran while the customer was on the Stripe page): the money must
             # be returned by a manager
-            logger.warning("%s is cancelled but received payment %s", order, payment.pk)
+            logger.warning("Order #%s is cancelled but received payment %s", order.pk, payment.pk)
 
-    logger.info("Payment %s for %s succeeded (%s)", payment.pk, order, order.payment_status)
+    logger.info("Payment %s for order #%s succeeded (%s)", payment.pk, order.pk, order.payment_status)
     return payment
 
 
@@ -154,7 +154,7 @@ def mark_payment_unsuccessful(payment_id, status, *, details=None):
         # for the rule "every payment change ends with a refresh"
         order.refresh_payment_status()
 
-    logger.info("Payment %s for %s is %s", payment.pk, order, status)
+    logger.info("Payment %s for order #%s is %s", payment.pk, order.pk, status)
     return payment
 
 
@@ -233,7 +233,7 @@ def start_online_payment(order_id, user, request):
     payment.external_id = session.external_id
     payment.details = {**payment.details, "url": session.url, "expires_at": session.expires_at}
     payment.save(update_fields=["external_id", "details", "updated_at"])
-    logger.info("Payment %s for %s: payment page created (%s)", payment.pk, order, session.external_id)
+    logger.info("Payment %s for order #%s: payment page created (%s)", payment.pk, order.pk, session.external_id)
     return session.url
 
 

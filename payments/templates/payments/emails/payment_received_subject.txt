@@ -1,2 +1,2 @@
 {# One line: send_order_email strips the newline at the end of the file #}
-{% autoescape off %}Bookstore: payment for {{ order }} received ({{ payment.amount }} UAH){% endautoescape %}
+{% load i18n %}{% autoescape off %}{% blocktranslate with amount=payment.amount %}Bookstore: payment for {{ order }} received ({{ amount }} UAH){% endblocktranslate %}{% endautoescape %}

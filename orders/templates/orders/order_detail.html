@@ -1,11 +1,12 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block title %}{{ order }}{% endblock %}
 
 {% block content %}
-<nav aria-label="breadcrumb">
+<nav aria-label="{% translate 'Breadcrumb' %}">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'orders:list' %}">My orders</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'orders:list' %}">{% translate "My orders" %}</a></li>
     <li class="breadcrumb-item active" aria-current="page">{{ order }}</li>
   </ol>
 </nav>
@@ -26,10 +27,10 @@
         <table class="table align-middle mb-0">
           <thead>
             <tr>
-              <th scope="col">Book</th>
-              <th scope="col" class="text-end">Price</th>
-              <th scope="col" class="text-end">Quantity</th>
-              <th scope="col" class="text-end">Cost</th>
+              <th scope="col">{% translate "Book" %}</th>
+              <th scope="col" class="text-end">{% translate "Price" %}</th>
+              <th scope="col" class="text-end">{% translate "Quantity" %}</th>
+              <th scope="col" class="text-end">{% translate "Cost" %}</th>
             </tr>
           </thead>
           <tbody>
@@ -46,7 +47,7 @@
           </tbody>
           <tfoot>
             <tr>
-              <th scope="row" colspan="3" class="text-end">Total</th>
+              <th scope="row" colspan="3" class="text-end">{% translate "Total" %}</th>
               <td class="text-end text-nowrap fs-5 fw-semibold">{{ order.total }} ₴</td>
             </tr>
           </tfoot>
@@ -58,22 +59,24 @@
   {# ---------- Delivery + actions ---------- #}
   <div class="col-lg-4">
     <div class="card shadow-sm">
-      <div class="card-header fw-semibold">Delivery</div>
+      <div class="card-header fw-semibold">{% translate "Delivery" %}</div>
       <div class="card-body">
         <p class="mb-1">{{ order.full_name }}</p>
         <p class="mb-1">{{ order.phone }}</p>
         {# linebreaksbr: line breaks of the address textarea -> <br> #}
         <p class="mb-3">{{ order.address|linebreaksbr }}</p>
         <p class="small text-body-secondary mb-0">
-          Created {{ order.created_at|date:"d.m.Y H:i" }}
+          {% blocktranslate with date=order.created_at|date:"d.m.Y H:i" %}Created {{ date }}{% endblocktranslate %}
         </p>
         {% if order.payment_status == "partially_paid" %}
           {# paid_amount / paid_percent: calculated from the payments, not stored #}
           <hr>
           <p class="small mb-1">
-            Paid {{ order.paid_amount }} of {{ order.total }} ₴ ({{ order.paid_percent }}%)
+            {% blocktranslate trimmed with paid=order.paid_amount total=order.total percent=order.paid_percent %}
+              Paid {{ paid }} of {{ total }} ₴ ({{ percent }}%)
+            {% endblocktranslate %}
           </p>
-          <div class="progress" role="progressbar" aria-label="Paid"
+          <div class="progress" role="progressbar" aria-label="{% translate 'Paid' %}"
                aria-valuenow="{{ order.paid_percent }}" aria-valuemin="0" aria-valuemax="100">
             <div class="progress-bar bg-warning" style="width: {{ order.paid_percent }}%"></div>
           </div>
@@ -85,18 +88,21 @@
           <div class="card-footer">
             <form method="post" action="{% url 'payments:pay' order.pk %}">
               {% csrf_token %}
-              <button class="btn btn-success w-100" type="submit">Pay {{ due }} ₴</button>
+              <button class="btn btn-success w-100" type="submit">{% blocktranslate %}Pay {{ due }} ₴{% endblocktranslate %}</button>
             </form>
-            <div class="form-text text-center">Card payment on the Stripe page</div>
+            <div class="form-text text-center">{% translate "Card payment on the Stripe page" %}</div>
           </div>
         {% endwith %}
       {% endif %}
       {% if order.can_be_cancelled_by_customer %}
         <div class="card-footer">
+          {# asvar: the translation goes into a variable, so |escapejs can make it #}
+          {# safe inside the JavaScript string (a translation may contain ' or ") #}
+          {% blocktranslate asvar confirm_text with order=order %}Cancel {{ order }}? The books will go back to stock.{% endblocktranslate %}
           <form method="post" action="{% url 'orders:cancel' order.pk %}"
-                onsubmit="return confirm('Cancel {{ order }}? The books will go back to stock.');">
+                onsubmit="return confirm('{{ confirm_text|escapejs }}');">
             {% csrf_token %}
-            <button class="btn btn-outline-danger w-100" type="submit">Cancel order</button>
+            <button class="btn btn-outline-danger w-100" type="submit">{% translate "Cancel order" %}</button>
           </form>
         </div>
       {% endif %}

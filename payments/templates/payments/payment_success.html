@@ -1,28 +1,29 @@
 {% extends "base.html" %}
+{% load i18n %}
 
-{% block title %}Payment{% endblock %}
+{% block title %}{% translate "Payment" %}{% endblock %}
 
 {% block content %}
 <div class="text-center py-5">
   {% if payment.status == "succeeded" %}
     <div class="display-1">✅</div>
-    <h1 class="h3 mt-3">Thank you, the payment is received</h1>
+    <h1 class="h3 mt-3">{% translate "Thank you, the payment is received" %}</h1>
     <p class="text-body-secondary">
-      {{ payment.amount }} ₴ for {{ order }}.
-      {% if order.payment_status == "paid" %}The order is fully paid.{% endif %}
+      {% blocktranslate with amount=payment.amount %}{{ amount }} ₴ for {{ order }}.{% endblocktranslate %}
+      {% if order.payment_status == "paid" %}{% translate "The order is fully paid." %}{% endif %}
     </p>
   {% elif payment.status == "pending" %}
     {# Stripe hasn't confirmed yet (slow bank, network): the webhook will #}
     <div class="display-1">⏳</div>
-    <h1 class="h3 mt-3">The payment is being confirmed</h1>
+    <h1 class="h3 mt-3">{% translate "The payment is being confirmed" %}</h1>
     <p class="text-body-secondary">
-      It usually takes a few seconds. The order page will show the result.
+      {% translate "It usually takes a few seconds. The order page will show the result." %}
     </p>
   {% else %}
     <div class="display-1">⚠️</div>
-    <h1 class="h3 mt-3">The payment didn't go through</h1>
-    <p class="text-body-secondary">You can try again from the order page.</p>
+    <h1 class="h3 mt-3">{% translate "The payment didn't go through" %}</h1>
+    <p class="text-body-secondary">{% translate "You can try again from the order page." %}</p>
   {% endif %}
-  <a class="btn btn-primary" href="{{ order.get_absolute_url }}">Open {{ order }}</a>
+  <a class="btn btn-primary" href="{{ order.get_absolute_url }}">{% blocktranslate %}Open {{ order }}{% endblocktranslate %}</a>
 </div>
 {% endblock %}

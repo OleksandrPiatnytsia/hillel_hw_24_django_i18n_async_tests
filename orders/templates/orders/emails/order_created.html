@@ -4,27 +4,33 @@ Mail clients (Gmail, Outlook) ignore <style> blocks and external CSS in many
 cases, so the styles are inline (style="...") and the layout is a table.
 Values are auto-escaped as on the site: a title with "<" can't break it.
 {% endcomment %}
+{% load i18n %}
+{# The language of the recipient: send_order_email() renders the email #}
+{# inside translation.override(user.language) #}
+{% get_current_language as LANGUAGE_CODE %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ LANGUAGE_CODE }}">
 <body style="margin:0; padding:24px; background:#f5f5f5; font-family:Arial, sans-serif; color:#212529;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
          style="max-width:600px; margin:0 auto; background:#ffffff; border-radius:8px;">
     <tr>
       <td style="padding:24px;">
-        <h1 style="font-size:20px; margin:0 0 16px;">📚 Bookstore</h1>
-        <p style="margin:0 0 8px;">Hello{% if order.full_name %}, {{ order.full_name }}{% endif %}!</p>
+        <h1 style="font-size:20px; margin:0 0 16px;">📚 {% translate "Bookstore" %}</h1>
+        <p style="margin:0 0 8px;">{% if order.full_name %}{% blocktranslate with name=order.full_name %}Hello, {{ name }}!{% endblocktranslate %}{% else %}{% translate "Hello!" %}{% endif %}</p>
         <p style="margin:0 0 16px;">
-          Thank you for your order. <strong>{{ order }}</strong> is created,
-          the books are reserved for you.
+          {% blocktranslate trimmed %}
+            Thank you for your order. <strong>{{ order }}</strong> is created,
+            the books are reserved for you.
+          {% endblocktranslate %}
         </p>
 
         <table role="presentation" width="100%" cellpadding="8" cellspacing="0"
                style="border-collapse:collapse; font-size:14px;">
           <tr style="background:#f1f3f5;">
-            <th align="left">Book</th>
-            <th align="right">Price</th>
-            <th align="right">Qty</th>
-            <th align="right">Cost</th>
+            <th align="left">{% translate "Book" %}</th>
+            <th align="right">{% translate "Price" %}</th>
+            <th align="right">{% translate "Qty" %}</th>
+            <th align="right">{% translate "Cost" %}</th>
           </tr>
           {% for item in order.items.all %}
             <tr style="border-bottom:1px solid #dee2e6;">
@@ -35,29 +41,29 @@ Values are auto-escaped as on the site: a title with "<" can't break it.
             </tr>
           {% endfor %}
           <tr>
-            <td colspan="3" align="right"><strong>Total</strong></td>
+            <td colspan="3" align="right"><strong>{% translate "Total" %}</strong></td>
             <td align="right" style="white-space:nowrap;"><strong>{{ order.total }} ₴</strong></td>
           </tr>
         </table>
 
-        <h2 style="font-size:16px; margin:24px 0 8px;">Delivery</h2>
+        <h2 style="font-size:16px; margin:24px 0 8px;">{% translate "Delivery" %}</h2>
         <p style="margin:0 0 16px; line-height:1.5;">
           {{ order.full_name }}<br>
           {{ order.phone }}<br>
           {{ order.address|linebreaksbr }}
         </p>
 
-        <p style="margin:0 0 24px;">Payment status: <strong>{{ order.get_payment_status_display }}</strong></p>
+        <p style="margin:0 0 24px;">{% blocktranslate with status=order.get_payment_status_display %}Payment status: <strong>{{ status }}</strong>{% endblocktranslate %}</p>
 
         <a href="{{ order_url }}"
            style="display:inline-block; padding:10px 20px; background:#0d6efd; color:#ffffff; text-decoration:none; border-radius:6px;">
-          Open the order
+          {% translate "Open the order" %}
         </a>
       </td>
     </tr>
   </table>
   <p style="text-align:center; font-size:12px; color:#6c757d;">
-    Bookstore · <a href="{{ site_url }}" style="color:#6c757d;">{{ site_url }}</a>
+    {% translate "Bookstore" %} · <a href="{{ site_url }}" style="color:#6c757d;">{{ site_url }}</a>
   </p>
 </body>
 </html>

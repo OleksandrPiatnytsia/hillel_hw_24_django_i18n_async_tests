@@ -1,16 +1,17 @@
 {% extends "base.html" %}
+{% load i18n %}
 
-{% block title %}Checkout{% endblock %}
+{% block title %}{% translate "Checkout" %}{% endblock %}
 
 {% block content %}
-<nav aria-label="breadcrumb">
+<nav aria-label="{% translate 'Breadcrumb' %}">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'cart:detail' %}">Cart</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Checkout</li>
+    <li class="breadcrumb-item"><a href="{% url 'cart:detail' %}">{% translate "Cart" %}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{% translate "Checkout" %}</li>
   </ol>
 </nav>
 
-<h1 class="h3 mb-4">Checkout</h1>
+<h1 class="h3 mb-4">{% translate "Checkout" %}</h1>
 
 <div class="row g-4">
 
@@ -18,7 +19,7 @@
   <div class="col-lg-7">
     <div class="card shadow-sm">
       <div class="card-body p-4">
-        <h2 class="h5 mb-3">Delivery</h2>
+        <h2 class="h5 mb-3">{% translate "Delivery" %}</h2>
         <form method="post" novalidate>
           {% csrf_token %}
           {# The three text fields; the checkbox is rendered below (other markup) #}
@@ -42,20 +43,23 @@
               {{ form.save_to_profile.label }}
             </label>
             <div class="form-text">
-              Next time they'll be filled in for you. You can also change them on
-              <a href="{% url 'users:profile_edit' %}">your profile</a>.
+              {% url 'users:profile_edit' as profile_url %}
+              {% blocktranslate trimmed %}
+                Next time they'll be filled in for you. You can also change them on
+                <a href="{{ profile_url }}">your profile</a>.
+              {% endblocktranslate %}
             </div>
           </div>
 
           <div class="mb-4">
-            <span class="form-label d-block">Email</span>
+            <span class="form-label d-block">{% translate "Email" %}</span>
             {# Not a form field: the order emails go to the profile email #}
             <div class="form-control-plaintext">{{ user.email }}</div>
-            <div class="form-text">Order emails go to this address (from your profile).</div>
+            <div class="form-text">{% translate "Order emails go to this address (from your profile)." %}</div>
           </div>
 
           <button class="btn btn-primary w-100" type="submit">
-            Place order · {{ cart.total }} ₴
+            {% blocktranslate with total=cart.total %}Place order · {{ total }} ₴{% endblocktranslate %}
           </button>
         </form>
       </div>
@@ -65,7 +69,7 @@
   {# ---------- Order summary ---------- #}
   <div class="col-lg-5">
     <div class="card shadow-sm">
-      <div class="card-header fw-semibold">Your order</div>
+      <div class="card-header fw-semibold">{% translate "Your order" %}</div>
       <ul class="list-group list-group-flush">
         {# "cart" from the context processor; one SQL query for all books #}
         {% for item in cart %}
@@ -75,7 +79,11 @@
               <div class="small text-body-secondary">{{ item.quantity }} × {{ item.price }} ₴</div>
               {% if item.exceeds_stock %}
                 <div class="small text-danger">
-                  {% if item.book.stock %}Only {{ item.book.stock }} left in stock{% else %}Out of stock now{% endif %}
+                  {% if item.book.stock %}{% blocktranslate trimmed count stock=item.book.stock %}
+                        Only {{ stock }} copy left in stock
+                      {% plural %}
+                        Only {{ stock }} copies left in stock
+                      {% endblocktranslate %}{% else %}{% translate "Out of stock now" %}{% endif %}
                 </div>
               {% endif %}
             </div>
@@ -83,12 +91,12 @@
           </li>
         {% endfor %}
         <li class="list-group-item d-flex justify-content-between fw-semibold">
-          <span>Total</span>
+          <span>{% translate "Total" %}</span>
           <span class="text-nowrap">{{ cart.total }} ₴</span>
         </li>
       </ul>
       <div class="card-footer small text-body-secondary">
-        The books are reserved when you place the order. Then you pay with the “Pay” button on the order page.
+        {% translate "The books are reserved when you place the order. Then you pay with the “Pay” button on the order page." %}
       </div>
     </div>
   </div>

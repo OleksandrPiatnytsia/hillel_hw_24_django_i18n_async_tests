@@ -1,22 +1,29 @@
 {% extends "base.html" %}
+{# {% load %} is per template: extends does not bring the tags of base.html #}
+{% load i18n %}
 
 {% comment %}
 Rendered by django.views.defaults.permission_denied — for example when
 PermissionRequiredMixin rejects a logged-in user. Works with DEBUG=True too.
 {% endcomment %}
 
-{% block title %}Access denied{% endblock %}
+{% block title %}{% translate "Access denied" %}{% endblock %}
 
 {% block content %}
 <div class="text-center py-5">
   <div class="display-1">🔒</div>
-  <h1 class="h3 mt-3">Access denied</h1>
+  <h1 class="h3 mt-3">{% translate "Access denied" %}</h1>
   <p class="text-body-secondary">
-    You don't have permission to open this page.
+    {% translate "You don't have permission to open this page." %}
     {% if user.is_authenticated %}
-      Your groups and permissions are listed on <a href="{% url 'users:profile' %}">your profile</a>.
+      {# Only plain variables work inside blocktranslate (no tags, no filters): #}
+      {# the URL is saved into a variable first #}
+      {% url 'users:profile' as profile_url %}
+      {% blocktranslate trimmed %}
+        Your groups and permissions are listed on <a href="{{ profile_url }}">your profile</a>.
+      {% endblocktranslate %}
     {% endif %}
   </p>
-  <a class="btn btn-primary" href="{% url 'books:list' %}">Back to catalog</a>
+  <a class="btn btn-primary" href="{% url 'books:list' %}">{% translate "Back to catalog" %}</a>
 </div>
 {% endblock %}

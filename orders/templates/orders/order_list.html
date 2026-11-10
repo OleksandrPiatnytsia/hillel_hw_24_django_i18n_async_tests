@@ -1,9 +1,10 @@
 {% extends "base.html" %}
+{% load i18n %}
 
-{% block title %}My orders{% endblock %}
+{% block title %}{% translate "My orders" %}{% endblock %}
 
 {% block content %}
-<h1 class="h3 mb-4">My orders</h1>
+<h1 class="h3 mb-4">{% translate "My orders" %}</h1>
 
 {% if orders %}
   <div class="card shadow-sm">
@@ -11,11 +12,11 @@
       <table class="table table-hover align-middle mb-0">
         <thead>
           <tr>
-            <th scope="col">Order</th>
-            <th scope="col">Date</th>
-            <th scope="col" class="text-end">Books</th>
-            <th scope="col" class="text-end">Total</th>
-            <th scope="col">Status</th>
+            <th scope="col">{% translate "Order" %}</th>
+            <th scope="col">{% translate "Date" %}</th>
+            <th scope="col" class="text-end">{% translate "Books" %}</th>
+            <th scope="col" class="text-end">{% translate "Total" %}</th>
+            <th scope="col">{% translate "Status" %}</th>
           </tr>
         </thead>
         <tbody>
@@ -40,8 +41,8 @@
   {% include "includes/pagination.html" %}
 {% else %}
   <div class="alert alert-info">
-    You have no orders yet.
-    <a class="alert-link" href="{% url 'books:list' %}">Go to the catalog</a>
+    {% translate "You have no orders yet." %}
+    <a class="alert-link" href="{% url 'books:list' %}">{% translate "Go to the catalog" %}</a>
   </div>
 {% endif %}
 {% endblock %}

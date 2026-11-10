@@ -10,6 +10,7 @@ import logging
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
+from django.utils import translation
 
 from .models import Order
 
@@ -27,6 +28,16 @@ def send_order_email(order, template_prefix, extra_context=None):
     successful checkout into an error page, so every problem is only logged
     (with the traceback) for the developer.
     """
+    # The email is written in the RECIPIENT's language (User.language), not in
+    # the language of the current request: it may be sent by a manager in the
+    # admin, by the Stripe webhook (no user at all) or by a command.
+    # override(): this language only inside the "with" block, then the
+    # previous one comes back (the manager's admin stays in their language).
+    with translation.override(order.user.language):
+        return _send(order, template_prefix, extra_context)
+
+
+def _send(order, template_prefix, extra_context):
     context = {
         "order": order,
         "user": order.user,
@@ -52,12 +63,14 @@ def send_order_email(order, template_prefix, extra_context=None):
         # Broad on purpose (SMTP errors, OSError for network problems,
         # template mistakes): see the docstring. logger.exception() adds
         # the traceback to the log.
+        # order.pk, not order: str(order) is translated ("Замовлення #5"),
+        # the log stays in English
         logger.exception(
-            "Email %s for %s to %s failed", template_prefix, order, order.user.email
+            "Email %s for order #%s to %s failed", template_prefix, order.pk, order.user.email
         )
         return False
 
-    logger.info("Email %s for %s sent to %s", template_prefix, order, order.user.email)
+    logger.info("Email %s for order #%s sent to %s", template_prefix, order.pk, order.user.email)
     return True
 
 

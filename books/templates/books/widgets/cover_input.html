@@ -6,24 +6,25 @@ widget.is_initial    — the book already has a cover (update page)
 widget.value         — current cover (FieldFile), .url gives /media/...
 widget.checkbox_name — "cover-clear": when checked, Django sets the field to empty
 {% endcomment %}
+{% load i18n %}
 {% if widget.is_initial %}
   <div class="d-flex align-items-center gap-3 mb-2">
     <a href="{{ widget.value.url }}" target="_blank" rel="noopener">
-      <img class="book-cover book-cover--thumb border" src="{{ widget.value.url }}" alt="Current cover">
+      <img class="book-cover book-cover--thumb border" src="{{ widget.value.url }}" alt="{% translate 'Current cover' %}">
     </a>
     <div>
-      <div class="small text-body-secondary mb-1">Current cover</div>
+      <div class="small text-body-secondary mb-1">{% translate "Current cover" %}</div>
       {% if not widget.required %}
         <div class="form-check">
           <input class="form-check-input" type="checkbox"
                  name="{{ widget.checkbox_name }}" id="{{ widget.checkbox_id }}"
                  {% if widget.attrs.disabled %}disabled{% endif %}
                  {% if widget.attrs.checked %}checked{% endif %}>
-          <label class="form-check-label" for="{{ widget.checkbox_id }}">Remove cover</label>
+          <label class="form-check-label" for="{{ widget.checkbox_id }}">{% translate "Remove cover" %}</label>
         </div>
       {% endif %}
     </div>
   </div>
-  <div class="small text-body-secondary mb-1">Upload a new one to replace it:</div>
+  <div class="small text-body-secondary mb-1">{% translate "Upload a new one to replace it:" %}</div>
 {% endif %}
 <input type="{{ widget.type }}" name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %}>

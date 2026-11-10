@@ -1,11 +1,12 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block title %}{{ book.title }}{% endblock %}
 
 {% block content %}
-<nav aria-label="breadcrumb">
+<nav aria-label="{% translate 'Breadcrumb' %}">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'books:list' %}">Catalog</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'books:list' %}">{% translate "Catalog" %}</a></li>
     <li class="breadcrumb-item active" aria-current="page">{{ book.title }}</li>
   </ol>
 </nav>
@@ -14,7 +15,7 @@
   <div class="card-body p-4">
     <div class="d-flex flex-wrap justify-content-between align-items-start gap-3">
       <img class="book-cover book-cover--large" src="{{ book.cover_url }}"
-           alt="Cover of {{ book.title }}">
+           alt="{% blocktranslate with title=book.title %}Cover of {{ title }}{% endblocktranslate %}">
       <div class="flex-grow-1">
         <h1 class="h3 mb-1">{{ book.title }}</h1>
         <p class="mb-2"><a class="link-secondary" href="{{ book.author.get_absolute_url }}">{{ book.author.name }}</a></p>
@@ -35,13 +36,16 @@
             <input type="hidden" name="next" value="{{ request.get_full_path }}">
             {# max is a hint for the browser; Cart.add() limits by stock itself #}
             <input class="form-control" style="width: 5rem" type="number" name="quantity"
-                   value="1" min="1" max="{{ book.stock }}" aria-label="Quantity">
-            <button class="btn btn-primary text-nowrap" type="submit">Add to cart</button>
+                   value="1" min="1" max="{{ book.stock }}" aria-label="{% translate 'Quantity' %}">
+            <button class="btn btn-primary text-nowrap" type="submit">{% translate "Add to cart" %}</button>
           </form>
         {% endif %}
         {% if in_cart %}
           <div class="small mt-2">
-            In your <a href="{% url 'cart:detail' %}">cart</a>: {{ in_cart }}
+            {% url 'cart:detail' as cart_url %}
+            {% blocktranslate trimmed %}
+              In your <a href="{{ cart_url }}">cart</a>: {{ in_cart }}
+            {% endblocktranslate %}
           </div>
         {% endif %}
       </div>
@@ -53,24 +57,26 @@
       {# linebreaks: \n -> <br>, blank line -> new <p>; text is still auto-escaped #}
       {{ book.description|linebreaks }}
     {% else %}
-      <p class="text-body-secondary fst-italic">No description yet.</p>
+      <p class="text-body-secondary fst-italic">{% translate "No description yet." %}</p>
     {% endif %}
 
     <p class="small text-body-secondary mb-0">
-      Added {{ book.created_at|date:"d.m.Y H:i" }}
-      · updated {{ book.updated_at|date:"d.m.Y H:i" }}
+      {# Filters are not allowed inside blocktranslate: "with" applies them first #}
+      {% blocktranslate trimmed with added=book.created_at|date:"d.m.Y H:i" updated=book.updated_at|date:"d.m.Y H:i" %}
+        Added {{ added }} · updated {{ updated }}
+      {% endblocktranslate %}
     </p>
   </div>
 
   <div class="card-footer d-flex gap-2">
-    <a class="btn btn-outline-secondary" href="{% url 'books:list' %}">&larr; Back to catalog</a>
+    <a class="btn btn-outline-secondary" href="{% url 'books:list' %}">&larr; {% translate "Back to catalog" %}</a>
     {# Hiding a button is only for convenience — the views check permissions themselves #}
     <div class="ms-auto d-flex gap-2">
       {% if perms.books.change_book %}
-        <a class="btn btn-primary" href="{% url 'books:update' book.pk %}">Edit</a>
+        <a class="btn btn-primary" href="{% url 'books:update' book.pk %}">{% translate "Edit" %}</a>
       {% endif %}
       {% if perms.books.delete_book %}
-        <a class="btn btn-outline-danger" href="{% url 'books:delete' book.pk %}">Delete</a>
+        <a class="btn btn-outline-danger" href="{% url 'books:delete' book.pk %}">{% translate "Delete" %}</a>
       {% endif %}
     </div>
   </div>

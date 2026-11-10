@@ -1,11 +1,12 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block title %}{{ author.name }}{% endblock %}
 
 {% block content %}
-<nav aria-label="breadcrumb">
+<nav aria-label="{% translate 'Breadcrumb' %}">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'books:author_list' %}">Authors</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'books:author_list' %}">{% translate "Authors" %}</a></li>
     <li class="breadcrumb-item active" aria-current="page">{{ author.name }}</li>
   </ol>
 </nav>
@@ -16,22 +17,22 @@
       <h1 class="h3 mb-3">{{ author.name }}</h1>
       {% if user.is_staff and perms.books.change_author %}
         <a class="btn btn-sm btn-outline-primary"
-           href="{% url 'admin:books_author_change' author.pk %}">Edit in admin</a>
+           href="{% url 'admin:books_author_change' author.pk %}">{% translate "Edit in admin" %}</a>
       {% endif %}
     </div>
     {% if author.bio %}
       {{ author.bio|linebreaks }}
     {% else %}
-      <p class="text-body-secondary fst-italic mb-0">No biography yet.</p>
+      <p class="text-body-secondary fst-italic mb-0">{% translate "No biography yet." %}</p>
     {% endif %}
   </div>
 </div>
 
 <div class="d-flex justify-content-between align-items-center mb-3">
-  <h2 class="h5 mb-0">Books ({{ books|length }})</h2>
+  <h2 class="h5 mb-0">{% blocktranslate with count=books|length %}Books ({{ count }}){% endblocktranslate %}</h2>
   {% if books %}
     {# Same books in the catalog — with filters, sorting and pagination #}
-    <a class="small" href="{% url 'books:list' %}?author={{ author.pk }}">Open in catalog &rarr;</a>
+    <a class="small" href="{% url 'books:list' %}?author={{ author.pk }}">{% translate "Open in catalog" %} &rarr;</a>
   {% endif %}
 </div>
 
@@ -55,7 +56,7 @@
         </div>
       </a>
     {% empty %}
-      <div class="list-group-item text-body-secondary">This author has no books yet.</div>
+      <div class="list-group-item text-body-secondary">{% translate "This author has no books yet." %}</div>
     {% endfor %}
   </div>
 </div>

@@ -51,8 +51,8 @@ coverage.xml
 .pytest_cache/
 cover/
 
-# Translations
-*.mo
+# Translations: *.mo (compiled) IS committed in this project: the Docker
+# image has no gettext to run compilemessages (locale/*/LC_MESSAGES/django.mo)
 *.pot
 
 # Django stuff:

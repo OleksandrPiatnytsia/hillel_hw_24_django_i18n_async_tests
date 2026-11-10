@@ -1,8 +1,14 @@
+{% load i18n %}
 {# Availability badge. Usage: {% include "books/includes/stock_badge.html" with book=book %} #}
 {% if book.stock == 0 %}
-  <span class="badge text-bg-danger">Out of stock</span>
+  <span class="badge text-bg-danger">{% translate "Out of stock" %}</span>
 {% elif book.is_low_stock %}
-  <span class="badge text-bg-warning">Only {{ book.stock }} left</span>
+  {# count: the form depends on the number (1 примірник / 3 примірники) #}
+  <span class="badge text-bg-warning">{% blocktranslate trimmed count stock=book.stock %}
+    Only {{ stock }} copy left
+  {% plural %}
+    Only {{ stock }} copies left
+  {% endblocktranslate %}</span>
 {% else %}
-  <span class="badge text-bg-success">In stock: {{ book.stock }}</span>
+  <span class="badge text-bg-success">{% blocktranslate with stock=book.stock %}In stock: {{ stock }}{% endblocktranslate %}</span>
 {% endif %}
