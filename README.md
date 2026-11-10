@@ -1,28 +1,33 @@
 # hillel_hw_24 — Django: інтернаціоналізація, асинхронні view і тести
 
-Навчальний Django-проєкт (Hillel). Продовження ДЗ №18 (книгарня в Docker). У цьому ДЗ:
+Навчальний Django-проєкт (Hillel). Продовження ДЗ №21 (книгарня: кошик, замовлення, Stripe). У цьому ДЗ:
 
-- **кошик у сесії** (`cart/cart.py`, клас `Cart`: додати, видалити, очистити), лічильник у навбарі;
-- **моделі `Order` і `OrderItem`**: оформлення в `transaction.atomic` з `select_for_update`
-  і резервом книг на складі, скасування повертає книги;
-- **оплата через Stripe Checkout Session** + webhook через Stripe CLI; часткові ручні оплати;
-- **email через Gmail SMTP**: «order created» і «payment received» після COMMIT;
-- **адмінка**: `OrderItem` і платежі як inline в `Order`, ручні платежі, скасування;
-- «My orders», дані доставки в профілі (підставляються при оформленні);
-- команда `cancel_unpaid_orders`;
-- **спільні volume** бази й обкладинок для всіх наступних ДЗ (без перенесення даних).
+- **інтерфейс українською та англійською**: моделі, форми, шаблони, повідомлення,
+  адмінка; файли `locale/uk/.../django.po` і `.mo`; перемикач мови в навбарі,
+  мова зберігається в профілі (`User.language`);
+- **листи мовою отримувача**, а не мовою того, хто зараз на сайті;
+- **3 асинхронні view** з асинхронними запитами до бази: `/health/`,
+  `/orders/<pk>/status/` (сторінка оплати сама дізнається, що webhook прийшов),
+  `/search/?q=` (підказки пошуку в навбарі);
+- **ASGI у Docker**: gunicorn з воркерами uvicorn, пул з'єднань з PostgreSQL;
+- **тести на pytest-django**: 140 unit і 54 integration, factory-boy, фейковий
+  Stripe і перехоплення пошти, покриття 96% (мінімум 70% перевіряється при кожному запуску).
 
 ## Стек
 
 - Python 3.13, Django 6.1
 - PostgreSQL 17 (`psycopg` 3), Redis 8 (вбудований у Django `RedisCache`)
-- Docker, docker compose; gunicorn; WhiteNoise (статика без nginx)
+- Docker, docker compose; gunicorn + uvicorn (ASGI); WhiteNoise (статика без nginx)
+- `psycopg-pool`: пул з'єднань з базою
+- gettext (`makemessages` / `compilemessages`), Django i18n
 - Bootstrap 5.3 (через CDN, із перевіркою `integrity`)
 - Pillow: перевірка зображень для `ImageField`
 - python-dotenv: налаштування з `.env`
 - Stripe: `stripe` 16 (Checkout Session, перевірка підпису webhook), Stripe CLI 1.55 у Docker
 - Gmail SMTP через `MAILERS` (новий формат налаштувань пошти в Django 6.1)
 - django-debug-toolbar 8.0 (тільки для розробки, `requirements-dev.txt`)
+- Тести (`requirements-dev.txt`): pytest 9, pytest-django, pytest-asyncio, pytest-cov,
+  factory-boy, polib
 
 ## Сторінки сайту
 
@@ -35,6 +40,7 @@
 | `/<pk>/delete/` | `books:delete` | `BookDeleteView` | `books.delete_book` | підтвердження й видалення |
 | `/authors/` | `books:author_list` | `AuthorListView` | усі | автори з кількістю книг |
 | `/authors/<pk>/` | `books:author_detail` | `AuthorDetailView` | усі | автор, біографія та його книги |
+| `/search/?q=` | `books:search` | `book_search` (**async**) | усі, GET | JSON: до 8 книг для підказок пошуку |
 | `/accounts/login/` | `users:login` | `UserLoginView` | усі | вхід (за username) |
 | `/accounts/logout/` | `users:logout` | `UserLogoutView` | POST | вихід |
 | `/accounts/signup/` | `users:signup` | `SignUpView` | гості | реєстрація |
@@ -48,12 +54,14 @@
 | `/orders/checkout/` | `orders:checkout` | `checkout` | залогінені | форма доставки й створення замовлення |
 | `/orders/<pk>/` | `orders:detail` | `order_detail` | власник (інакше 404) | замовлення, кнопки Pay і Cancel |
 | `/orders/<pk>/cancel/` | `orders:cancel` | `order_cancel` | POST, власник | скасувати нове неоплачене замовлення |
+| `/orders/<pk>/status/` | `orders:status` | `order_status` (**async**) | власник (401 / 404 у JSON) | JSON: статус замовлення й оплати |
 | `/payments/pay/<order_id>/` | `payments:pay` | `pay` | POST, власник | на сторінку оплати Stripe |
 | `/payments/success/` | `payments:success` | `payment_success` | залогінені | повернення зі Stripe, `?session_id=...` |
 | `/payments/cancelled/<payment_id>/` | `payments:cancelled` | `payment_cancelled` | залогінені | «назад» зі Stripe |
 | `/payments/webhook/<provider>/` | `payments:webhook` | `webhook` | POST, підпис Stripe | події від Stripe |
 | `/admin/` | `admin:index` | | `is_staff` | адмінка |
-| `/health/` | `health` | `health` (`config/views.py`) | усі, GET | стан PostgreSQL і Redis: 200 або 503, JSON |
+| `/health/` | `health` | `health` (**async**, `config/views.py`) | усі, GET | стан PostgreSQL і Redis: 200 або 503, JSON |
+| `/i18n/setlang/` | `set_language` | `set_language` (`config/views.py`) | POST | змінити мову: cookie + `User.language` |
 | `/__debug__/` | | | `DEBUG` + `INTERNAL_IPS` | службові адреси Debug Toolbar |
 
 Маршрути описані в `urls.py` кожного застосунку (`app_name` = `books`, `users`,
@@ -66,9 +74,12 @@
 ```
 config/
 ├── settings.py              # PostgreSQL, Redis, WhiteNoise, AUTH_USER_MODEL, Debug Toolbar, LOGGING
-├── urls.py                  # admin + books + accounts/ + cart/ + orders/ + payments/ + health/
-├── views.py                 # health: перевірка PostgreSQL і Redis
-├── middleware.py            # RequestTimingMiddleware
+├── settings_test.py         # налаштування для pytest: швидкий хеш паролів, LocMemCache, без пулу
+├── urls.py                  # admin + books + accounts/ + cart/ + orders/ + payments/ + health/ + i18n/
+├── asgi.py                  # ASGI-застосунок (Docker: gunicorn + uvicorn)
+├── views.py                 # health (async), set_language
+├── i18n.py                  # is_supported_language(), set_language_cookie()
+├── middleware.py            # RequestTimingMiddleware, AsyncWhiteNoiseMiddleware (sync + async)
 └── logging_filters.py       # HideClientErrorTraceback (403/404 без traceback)
 users/
 ├── models.py                # User(AbstractUser): email lowercase і унікальний; phone, address
@@ -83,7 +94,8 @@ users/
 │   ├── 0001_initial.py
 │   ├── 0002_lowercase_email.py    # дані → lowercase + CheckConstraint
 │   ├── 0003_create_groups.py      # групи Customers / Editors / Managers
-│   └── 0004_user_address_user_phone.py
+│   ├── 0004_user_address_user_phone.py
+│   └── 0005_user_language.py      # мова користувача (листи, вхід з іншого пристрою)
 └── templates/users/
     ├── auth_form.html       # спільний для входу й реєстрації
     ├── profile.html
@@ -91,7 +103,7 @@ users/
 books/
 ├── models.py                # Category, Author, Book (+ cover), BookCategory, BookQuerySet
 ├── forms.py                 # BookForm, BookFilterForm, CoverInput
-├── views.py                 # Class-Based Views для книг і авторів
+├── views.py                 # Class-Based Views для книг і авторів, book_search (async)
 ├── urls.py                  # app_name = "books"
 ├── admin.py                 # адмінка (+ мініатюри обкладинок)
 ├── templates/books/
@@ -116,8 +128,8 @@ orders/
 ├── models.py                # Order, OrderItem; paid_amount, amount_due, refresh_payment_status()
 ├── services.py              # create_order(), cancel_order(): транзакції й блокування
 ├── forms.py                 # CheckoutForm
-├── views.py                 # checkout, OrderListView, order_detail, order_cancel
-├── emails.py                # send_order_email(), лист «order created»
+├── views.py                 # checkout, OrderListView, order_detail, order_cancel, order_status (async)
+├── emails.py                # send_order_email(): лист мовою отримувача
 ├── admin.py                 # OrderAdmin: inline позицій і платежів, скасування
 ├── migrations/0002_managers_order_permissions.py   # права групи Managers
 ├── management/commands/cancel_unpaid_orders.py
@@ -142,16 +154,25 @@ templates/                   # спільні шаблони проєкту
     ├── navbar.html
     ├── messages.html
     └── pagination.html
+locale/                      # переклади (у git разом з .mo: у Docker-образі немає gettext)
+├── uk/LC_MESSAGES/django.po # українські переклади (джерело)
+├── uk/LC_MESSAGES/django.mo # скомпільовані (їх читає Django)
+└── en/LC_MESSAGES/          # порожні msgstr: англійська — мова оригіналу
 static/                      # статика проєкту
 ├── css/styles.css
+├── js/book_search.js        # підказки пошуку в навбарі (fetch до /search/)
+├── js/payment_status.js     # сторінка «оплата підтверджується»: опитує /orders/<pk>/status/
 └── img/
     ├── no-cover.svg         # заглушка, коли обкладинки немає
     └── favicon.svg
 media/                       # завантажені обкладинки (не в git)
 logs/                        # app.log і його ротації (не в git)
 requirements.txt             # залежності проєкту
-requirements-dev.txt         # + django-debug-toolbar
-Dockerfile                   # образ web: python:3.13-slim, користувач app, gunicorn
+requirements-dev.txt         # + django-debug-toolbar і пакети для тестів
+tests/                       # див. «Тести»
+pytest.ini                   # налаштування pytest, звіти покриття, мінімум 70%
+.coveragerc                  # що рахується в покритті
+Dockerfile                   # образ web: python:3.13-slim, користувач app, gunicorn + uvicorn
 .dockerignore                # що не потрапляє в образ (.env, .venv, бази, media)
 docker-entrypoint.sh         # migrate + collectstatic, потім exec команди
 docker-compose.yml           # web + db + redis + stripe-cli, volumes, healthchecks
@@ -275,13 +296,13 @@ DevTools не вийде. Редактор створює книжку з `stock
 
 ```python
 ENABLE_DEBUG_TOOLBAR = (
-    DEBUG and find_spec("debug_toolbar") is not None and "test" not in sys.argv
+    DEBUG and find_spec("debug_toolbar") is not None and not TESTING
 )
 ```
 
 - `DEBUG=True`: у продакшні тулбара немає взагалі (ні в `INSTALLED_APPS`, ні в URL);
 - пакет встановлено (`requirements-dev.txt`): з одним `requirements.txt` проєкт працює;
-- не `manage.py test`.
+- не тести: `TESTING = "test" in sys.argv or "pytest" in sys.modules`.
 
 Тулбар бачать лише запити з `INTERNAL_IPS = ["127.0.0.1", "::1"]`, незалежно
 від того, хто залогінений. Так можна дивитися SQL і шаблони очима гостя чи
@@ -351,6 +372,8 @@ INFO config.middleware GET /create/ 403 3.6ms user=ann
 - `request.user` доступний, хоча middleware стоїть вище за
   `AuthenticationMiddleware`: та присвоює його тому самому об'єкту `request`
   ще до того, як відповідь повертається до нас.
+- Працює і в синхронному режимі (`runserver`, WSGI), і в асинхронному
+  (ASGI у Docker): див. «Асинхронні view та ASGI».
 
 Реєстрація й вхід займають ~300 мс, решта сторінок кілька мілісекунд: це
 хешування пароля (PBKDF2), воно навмисно повільне.
@@ -686,6 +709,8 @@ MAILERS = {
 - Посилання в листах будуються від `SITE_URL`: лист відправляється без запиту
   (після COMMIT, з webhook), `request.build_absolute_uri()` там недоступний.
 
+Листи пишуться **мовою отримувача** (`User.language`): див. «Інтернаціоналізація».
+
 | Лист | Коли |
 |---|---|
 | «order created» | після COMMIT оформлення: позиції, сума, доставка, посилання |
@@ -699,6 +724,239 @@ MAILERS = {
 - Перевірити SMTP: `docker compose exec web python manage.py sendtestemail адреса@gmail.com`.
 - Тестові користувачі: адреси з `+` (`адреса+ann@gmail.com`) приходять у ту саму
   скриньку, а для сайту це різні email.
+
+## Інтернаціоналізація (i18n)
+
+Мови: українська (`uk`, за замовчуванням) і англійська (`en`). Перекладається
+інтерфейс; дані (книги, автори) — ні, див. «Відомі обмеження».
+
+```python
+# config/settings.py
+LANGUAGE_CODE = "uk"
+LANGUAGES = [("uk", _("Ukrainian")), ("en", _("English"))]
+LOCALE_PATHS = [BASE_DIR / "locale"]
+MIDDLEWARE = [..., "django.contrib.sessions.middleware.SessionMiddleware",
+              "django.middleware.locale.LocaleMiddleware", ...]
+```
+
+### Як визначається мова
+
+`LocaleMiddleware` на кожному запиті бере мову в такому порядку:
+
+1. cookie `django_language` (ставить перемикач мови);
+2. заголовок браузера `Accept-Language`;
+3. `LANGUAGE_CODE` = `uk`.
+
+URL без префікса мови (`/en/...` немає): адреси однакові для обох мов.
+
+**Перемикач у навбарі** (🌐) — форма `POST /i18n/setlang/` (`config/views.py`, `set_language`):
+
+- ставить cookie на рік і повертає на ту саму сторінку;
+- для залогіненого зберігає вибір у `User.language`;
+- при вході (`UserLoginView`) мова з профілю стає мовою сайту, тож вибір
+  переходить на інший пристрій;
+- при реєстрації в профіль записується мова, якою людина реєструвалась;
+- невідомий код (`de`) ігнорується: вбудований view Django перевіряє лише, що
+  в Django є переклади для коду, а не `settings.LANGUAGES`.
+
+### Що позначено для перекладу
+
+| Де | Як |
+|---|---|
+| моделі | `verbose_name`, `help_text`, `choices` через `gettext_lazy` (`_`) |
+| форми, адмінка, `apps.py` | `gettext_lazy` |
+| views, сервіси (повідомлення) | `gettext` під час запиту; `ngettext` для чисел |
+| шаблони | `{% translate %}`, `{% blocktranslate %}` (зі змінними, `count`, `trimmed`) |
+| листи | шаблони листів + `translation.override(user.language)` |
+
+- `gettext_lazy` — у коді, що виконується при імпорті (поля моделей, форм):
+  мова ще невідома, переклад береться пізніше, при показі. `gettext` — усередині
+  функцій, коли запит уже має мову.
+- Змінні в текстах — іменовані: `_("“%(title)s” is out of stock.") % {"title": ...}`.
+  Перекладач бачить, що підставиться, і може змінити порядок слів.
+- **Множина.** Українська має 4 форми (`Plural-Forms: nplurals=4`):
+  «1 книга, 3 книги, 5 книг, 21 книга». Фільтр `|pluralize` знає лише англійську,
+  тому `{% blocktranslate count counter=... %}` і `ngettext`.
+- Текст у JavaScript (`confirm(...)` скасування замовлення) — через
+  `{% blocktranslate asvar %}` + `|escapejs`, щоб апостроф не зламав JS.
+- Числа форматуються за мовою: `501,00 грн` / `501.00`.
+- Права (`Can change stock quantity`) і логи лишаються англійською: це технічні
+  рядки, у лог пишеться `order #5`, а не перекладене «Замовлення #5».
+
+### Листи мовою отримувача
+
+```python
+# orders/emails.py
+def send_order_email(order, template_prefix, extra_context=None):
+    with translation.override(order.user.language):
+        return _send(order, template_prefix, extra_context)
+```
+
+Лист рендериться мовою з профілю клієнта, а не мовою запиту: webhook від
+Stripe приходить без cookie, менеджер з англійською адмінкою додає оплату
+україномовному клієнтові — лист однаково правильною мовою.
+
+### Файли перекладів
+
+```bash
+python manage.py makemessages -l uk -l en --ignore=.venv   # зібрати тексти в .po
+# перекласти msgstr у locale/uk/LC_MESSAGES/django.po
+python manage.py compilemessages --ignore=.venv            # .po -> .mo
+```
+
+- Потрібен GNU gettext (`brew install gettext`).
+- `.mo` **у git**: у Docker-образі gettext немає, а Django читає саме `.mo`.
+  Після зміни `.po` обов'язково `compilemessages`, інакше сайт показуватиме старий
+  текст (це ловить тест `test_compiled_mo_matches_the_po`).
+- `locale/en/` з порожніми `msgstr`: англійська — мова оригіналу в коді.
+
+## Асинхронні view та ASGI
+
+### Три async view
+
+| View | Асинхронні запити | Хто викликає |
+|---|---|---|
+| `health` (`config/views.py`) | `ContentType.objects.aexists()`, `cache.aset` / `aget` / `adelete`, `asyncio.gather` | healthcheck Docker |
+| `order_status` (`orders/views.py`) | `await request.auser()`, `.values(...).afirst()`, `.aaggregate(Sum(...))` | `static/js/payment_status.js` кожні 2 с |
+| `book_search` (`books/views.py`) | `async for book in queryset` (з `select_related`) | `static/js/book_search.js` під час набору |
+
+```python
+@never_cache
+@require_GET
+async def order_status(request, pk):
+    user = await request.auser()          # request.user зробив би синхронний запит
+    if not user.is_authenticated:
+        return JsonResponse({"error": "login required"}, status=401)
+    order = await (Order.objects.filter(pk=pk, user=user)
+                   .values("pk", "status", "payment_status", "total").afirst())
+    ...
+```
+
+- У async view не можна викликати синхронний ORM: Django кине
+  `SynchronousOnlyOperation`. Тому `request.auser()` замість `request.user`,
+  `afirst()`, `aaggregate()`, `async for`.
+- **Сторінка «Оплата підтверджується».** Клієнт часто повертається зі Stripe
+  раніше, ніж приходить webhook. Сторінка опитує `/orders/<pk>/status/` і, щойно
+  `payment_status` змінився, сама відкриває замовлення (максимум ~1 хвилина).
+- **Підказки пошуку.** Запит через 250 мс після останньої клавіші, від 2 літер;
+  старий запит скасовується (`AbortController`), назви вставляються через
+  `textContent` (не `innerHTML`), тож `<script>` у назві лишиться текстом.
+- JSON віддає і коди (`"paid"`) для логіки, і підписи мовою запиту
+  (`"Оплачено"` / `"Paid"`), і суми у форматі мови (`"250,50"` / `"250.50"`).
+
+### ASGI у Docker
+
+```
+gunicorn (керує процесами, перезапускає впалі)
+  └─ 3 воркери uvicorn_worker.UvicornWorker (event loop, протокол ASGI)
+       └─ config.asgi:application → middleware → view
+```
+
+```dockerfile
+CMD ["gunicorn", "config.asgi:application", "-k", "uvicorn_worker.UvicornWorker",
+     "--bind", "0.0.0.0:8000", "--workers", "3", "--no-control-socket"]
+```
+
+- **Async view** виконуються прямо в event loop; поки view чекає на базу, воркер
+  обслуговує інші запити. **Звичайні (sync) view** працюють як і раніше: Django
+  запускає їх у потоці.
+- **Middleware для обох режимів.** Якщо хоч один middleware лише синхронний,
+  Django під ASGI запускає його й усе нижче в потоці на кожен запит, і
+  асинхронність втрачається. Тому `RequestTimingMiddleware` має `__call__` і
+  `__acall__` (`sync_capable = async_capable = True`). WhiteNoise 6.12 лише
+  синхронний, тому `AsyncWhiteNoiseMiddleware` (підклас у `config/middleware.py`)
+  додає async-шлях і читає файли частинами в потоці, а не цілком у пам'ять.
+- **Пул з'єднань** замість `CONN_MAX_AGE`:
+  ```python
+  "CONN_MAX_AGE": 0,
+  "OPTIONS": {"pool": {"min_size": 2, "max_size": 10, "timeout": 10}},
+  ```
+  Під ASGI запити до бази йдуть з різних потоків; постійні з'єднання тримались
+  би окремо на кожен потік і накопичувались. Пул (`psycopg-pool`) ділить кілька
+  з'єднань між усіма потоками процесу.
+- Перевірено навантаженням: 300 паралельних `/health/` і 200 `/search/` —
+  усі 200.
+
+## Тести
+
+```bash
+pip install -r requirements-dev.txt
+docker compose up -d db               # тестова база test_bookstore створюється в цьому PostgreSQL
+pytest                                # усі тести + покриття (термінал і htmlcov/index.html)
+pytest tests/unit                     # лише unit
+pytest -k webhook --no-cov            # кілька тестів за назвою, без покриття (швидше)
+open htmlcov/index.html               # непокриті рядки підсвічені
+```
+
+| | Кількість | Що перевіряють |
+|---|---|---|
+| `tests/unit/` | 140 | одна функція, модель, форма або один запит |
+| `tests/integration/` | 54 | сценарії з кількох кроків: кошик → замовлення → Stripe → webhook → лист |
+| `tests/test_setup.py` | 7 | сама інфраструктура: налаштування, фабрики, фейки |
+
+Покриття **96.58%**; `--cov-fail-under=70` у `pytest.ini`: якщо покриття впаде
+нижче 70%, `pytest` завершиться з помилкою.
+
+### Структура
+
+```
+tests/
+├── conftest.py            # фікстури: користувачі й клієнти, fake_stripe, failing_mailer, ізольований MEDIA_ROOT
+├── factories.py           # factory-boy: User, Category, Author, Book, Order (+ items), OrderItem, Payment
+├── fakes.py               # FakeStripeClient, підписані події webhook
+├── helpers.py             # message_levels(), дані форм адмінки
+├── unit/
+│   ├── test_models.py, test_forms.py, test_cart_and_helpers.py, test_views.py
+│   ├── test_language.py           # перемикач мови, User.language
+│   ├── test_async_views.py        # async view через AsyncClient
+│   ├── test_payment_services.py   # відмови й помилки оплат
+│   └── test_translation_catalog.py  # .po повний, .mo скомпільований
+└── integration/
+    ├── test_checkout_flow.py      # зокрема гонка: два покупці за останній примірник
+    ├── test_payment_flow.py       # Stripe: сторінка, повернення, webhook, один лист
+    ├── test_admin_and_commands.py # адмінка менеджера, management-команди
+    ├── test_book_management.py    # менеджер і редактор: права на книги
+    ├── test_language_flow.py, test_translations.py  # сайт і листи двома мовами
+    └── test_async_flow.py         # опитування статусу до і після webhook
+```
+
+### Фікстури й моки
+
+- **factory-boy** (`tests/factories.py`): `BookFactory(title="Kobzar", categories=[poetry])`,
+  `OrderFactory(user=ann, items=[(book, 2)])` — сума рахується з позицій.
+- **Stripe** — `FakeStripeClient` замість `StripeProvider._client` (фікстура
+  `fake_stripe`): запам'ятовує створені сесії, вміє «оплатити» (`pay()`),
+  «прострочити» (`expire_session()`) і впасти (`fail_with`). Webhook-запити
+  підписуються справжнім HMAC, тому перевірка підпису теж тестується.
+- **Email** — `mailoutbox` (pytest-django, бекенд `locmem`): листи нікуди не
+  йдуть. Листи після COMMIT — через `django_capture_on_commit_callbacks(execute=True)`.
+  `failing_mailer` імітує падіння SMTP: замовлення має зберегтися.
+- **Налаштування тестів** (`config/settings_test.py`): MD5-хеш паролів (швидко),
+  `LocMemCache` замість Redis, фейкові ключі Stripe, без пулу з'єднань і без запису в `logs/app.log`.
+
+### Async-тести
+
+```python
+pytestmark = [
+    pytest.mark.django_db(transaction=True, serialized_rollback=True),
+    pytest.mark.usefixtures("async_db_connections"),
+]
+
+async def test_order_status_needs_login(order_of_ann):
+    response = await AsyncClient().get(reverse("orders:status", args=[order_of_ann.pk]))
+    assert response.status_code == 401
+```
+
+- `AsyncClient` проводить запит через ASGI-обробник, як у Docker.
+- `transaction=True`: асинхронний ORM працює в іншому потоці з іншим з'єднанням
+  і не бачить даних з незакоміченої транзакції звичайного тесту.
+- `serialized_rollback=True`: після очищення таблиць Django повертає дані з
+  міграцій (групи, права), інакше наступні тести їх не знайдуть.
+- Фабрики в async-тестах — через `await sync_to_async(BookFactory)(...)`.
+- `async_db_connections` закриває з'єднання потоку `sync_to_async` після тесту;
+  без цього pytest не може видалити `test_bookstore` наприкінці.
+- Тестова база створюється заново на кожен запуск (без `--reuse-db`): тест гонки
+  з `transaction=True` очищає таблиці, і повторно використана база стартувала б без груп.
 
 ## Встановлення та запуск
 
@@ -730,7 +988,7 @@ docker compose up
   ├─ db          postgres:17-alpine  ──┐ healthcheck: pg_isready
   ├─ redis       redis:8-alpine      ──┤ healthcheck: redis-cli ping
   │                                    ▼ обидва healthy (depends_on: condition: service_healthy)
-  ├─ web         Dockerfile → docker-entrypoint.sh → migrate → collectstatic → exec gunicorn
+  ├─ web         Dockerfile → docker-entrypoint.sh → migrate → collectstatic → exec gunicorn (uvicorn workers)
   │                                    healthcheck: GET /health/
   │                                    ▼ healthy
   └─ stripe-cli  stripe listen --forward-to web:8000/payments/webhook/stripe/
@@ -813,7 +1071,7 @@ docker run --rm -v hillel_hw_18_django_postgres_docker_media_data:/from -v hille
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-pip install -r requirements-dev.txt   # або requirements.txt без Debug Toolbar
+pip install -r requirements-dev.txt   # або requirements.txt без Debug Toolbar і тестів
 
 docker compose up -d db redis         # тільки база й Redis
 python manage.py migrate
@@ -821,6 +1079,9 @@ python manage.py runserver
 ```
 
 - Сайт: http://127.0.0.1:8000/ (саме `127.0.0.1`, щоб з'явився Debug Toolbar)
+- `runserver` працює через WSGI: async view теж працюють (Django запускає їм
+  event loop на кожен запит), але без переваг ASGI. Як у Docker:
+  `uvicorn config.asgi:application --reload` (без Debug Toolbar).
 - Лог: `logs/app.log`
 - Якщо контейнер `web` теж запущений, він уже займає порт 8000:
   `docker compose stop web` або `runserver 8001`.
@@ -889,8 +1150,8 @@ docker compose exec -u root web chown -R app:app /app/media
 
 ## `/health/`
 
-`config/views.py`: `SELECT 1` у PostgreSQL і `cache.set` / `cache.get` випадкового
-значення в Redis.
+`config/views.py`, async view: `await ContentType.objects.aexists()` у PostgreSQL і
+`cache.aset` / `aget` / `adelete` випадкового значення під **випадковим ключем** у Redis.
 
 ```
 200 {"status": "ok", "database": "ok", "cache": "ok"}
@@ -898,6 +1159,9 @@ docker compose exec -u root web chown -R app:app /app/media
 ```
 
 - 503, а не 500: Django працює, недоступний сервіс, від якого він залежить.
+- Ключ кешу випадковий для кожної перевірки: зі спільним ключем одночасні
+  перевірки перезаписували значення одна одної, і під навантаженням (50
+  паралельних запитів під ASGI) справний Redis давав 503.
 - Подробиці помилки пишуться тільки в лог (`config.views`), не у відповідь.
 - `@never_cache`, `@require_GET`; сесію не читає, тому працює й без Redis.
 - Перевірено: `docker compose stop redis` → 503, `web` за ~30 с стає `unhealthy`;
@@ -1022,14 +1286,18 @@ ORDER BY:  андрій, Андрій, Борис, Гліб, Ґанна, Євг�
   попереджає «return the money to the customer»; refund через Stripe API немає.
 - **Листи й скасування неоплачених — синхронно й вручну.** Лист відправляється в
   межах запиту; `cancel_unpaid_orders` запускається руками. Обидва — задачі для Celery.
-- **Немає тестів.** Перевірки робились тестовим клієнтом на тимчасовій базі, у
-  репозиторії тестів поки немає.
+- **Дані не перекладаються.** Інтерфейс двомовний, але назви й описи книг,
+  імена авторів і категорії зберігаються однією мовою (так, як їх внесли).
+- **Сторінка Stripe не українською.** Stripe Checkout не має української:
+  для `uk` передається `locale="auto"` (мова браузера), для `en` — `"en"`.
+- **Асинхронний ORM Django 6.1 — обгортка.** Запити до бази все одно йдуть у
+  потоці (`sync_to_async`); виграш у тому, що event loop не чекає на них.
 
 ## Плани
 
 - nginx перед gunicorn: роздача static і media, `DEBUG=False` у Docker;
-- i18n: українська та англійська мови інтерфейсу;
+- переклад даних: назви й описи книг, автори, категорії українською та англійською
+  (django-modeltranslation або django-parler);
 - валюти: модель `Currency` (UAH, USD);
 - скидання пароля й підтвердження email;
-- Celery: листи у фоні, `cancel_unpaid_orders` за розкладом (beat);
-- тести для кошика, оформлення (зокрема гонок), webhook, views, форм і прав доступу.
+- Celery: листи у фоні, `cancel_unpaid_orders` за розкладом (beat).
