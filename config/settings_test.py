@@ -10,7 +10,8 @@ fast, repeatable and independent of the local .env:
   before every test;
 - fixed fake Stripe keys: the Stripe client is replaced by a fake in tests
   (tests/fakes.py), the webhook secret signs the test webhook requests;
-- no log file: test runs don't write to logs/app.log.
+- no log file: test runs don't write to logs/app.log;
+- no STATIC_ROOT: collectstatic is not needed for the tests.
 
 The database stays PostgreSQL from .env (the Docker db container on
 localhost:5432): pytest-django creates a separate database "test_<name>"
@@ -29,6 +30,11 @@ CACHES = {
         "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
     }
 }
+
+# No collected static files in tests: without this WhiteNoise warns
+# "No directory at: .../staticfiles/" on every request. {% static %} in the
+# templates still builds the URLs (it doesn't read the files).
+STATIC_ROOT = None
 
 STRIPE_SECRET_KEY = "sk_test_fake"
 STRIPE_WEBHOOK_SECRET = "whsec_test_fake"
