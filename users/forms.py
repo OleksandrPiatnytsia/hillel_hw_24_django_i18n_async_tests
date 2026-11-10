@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.utils.translation import gettext_lazy as _
 
 from .models import User
 from .phone import normalize_phone
@@ -57,7 +58,7 @@ class ProfileForm(BootstrapFormMixin, forms.ModelForm):
             ),
             "address": forms.Textarea(
                 attrs={"rows": 3, "autocomplete": "street-address",
-                       "placeholder": "City, street, house, flat or the post office number"}
+                       "placeholder": _("City, street, house, flat or the post office number")}
             ),
         }
 

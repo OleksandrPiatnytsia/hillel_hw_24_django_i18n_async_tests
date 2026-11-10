@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.http import url_has_allowed_host_and_scheme
+from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
 
 from books.models import Book
@@ -40,7 +41,7 @@ def cart_add(request, book_id):
     book = get_object_or_404(Book, pk=book_id)
     form = CartAddForm(request.POST)
     if not form.is_valid():
-        messages.error(request, "Quantity must be a whole number, 1 or more.")
+        messages.error(request, _("Quantity must be a whole number, 1 or more."))
         return _redirect_back(request)
 
     quantity = Cart(request).add(
@@ -50,15 +51,19 @@ def cart_add(request, book_id):
     )
 
     if quantity == 0:
-        messages.error(request, f"“{book.title}” is out of stock.")
+        messages.error(request, _("“%(title)s” is out of stock.") % {"title": book.title})
     elif quantity == book.stock:
         # Either exactly the stock was asked for, or more and Cart.add() cut it
         messages.warning(
             request,
-            f"“{book.title}”: {quantity} in the cart, that's all we have in stock.",
+            _("“%(title)s”: %(quantity)s in the cart, that's all we have in stock.")
+            % {"title": book.title, "quantity": quantity},
         )
     else:
-        messages.success(request, f"“{book.title}”: {quantity} in the cart.")
+        messages.success(
+            request,
+            _("“%(title)s”: %(quantity)s in the cart.") % {"title": book.title, "quantity": quantity},
+        )
     return _redirect_back(request)
 
 
@@ -66,12 +71,12 @@ def cart_add(request, book_id):
 def cart_remove(request, book_id):
     book = get_object_or_404(Book, pk=book_id)
     Cart(request).remove(book)
-    messages.success(request, f"“{book.title}” removed from the cart.")
+    messages.success(request, _("“%(title)s” removed from the cart.") % {"title": book.title})
     return _redirect_back(request)
 
 
 @require_POST
 def cart_clear(request):
     Cart(request).clear()
-    messages.success(request, "The cart is empty now.")
+    messages.success(request, _("The cart is empty now."))
     return redirect("cart:detail")

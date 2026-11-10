@@ -1,5 +1,7 @@
 from django import forms
 
+from django.utils.translation import gettext_lazy as _
+
 from users.phone import normalize_phone
 
 from .models import Order
@@ -19,17 +21,14 @@ class CheckoutForm(forms.ModelForm):
     save_to_profile = forms.BooleanField(
         required=False,
         initial=True,
-        label="Save phone and address to my profile",
+        label=_("Save phone and address to my profile"),
         widget=forms.CheckboxInput(attrs={"class": "form-check-input"}),
     )
 
     class Meta:
         model = Order
         fields = ["full_name", "phone", "address"]
-        labels = {
-            "full_name": "Full name",
-            "address": "Delivery address",
-        }
+        # Labels come from the model fields (verbose_name, translated there)
         widgets = {
             "full_name": forms.TextInput(attrs={"class": "form-control", "autocomplete": "name"}),
             # type="tel": a phone keyboard on mobile
@@ -39,7 +38,7 @@ class CheckoutForm(forms.ModelForm):
             ),
             "address": forms.Textarea(
                 attrs={"class": "form-control", "rows": 3, "autocomplete": "street-address",
-                       "placeholder": "City, street, house, flat or the post office number"}
+                       "placeholder": _("City, street, house, flat or the post office number")}
             ),
         }
 

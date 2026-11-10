@@ -1,6 +1,7 @@
 import re
 
 from django.core.exceptions import ValidationError
+from django.utils.translation import gettext as _
 
 
 def normalize_phone(value):
@@ -15,6 +16,6 @@ def normalize_phone(value):
     digits = re.sub(r"\D", "", value)  # \D = any non-digit
     if not re.fullmatch(r"\+?[\d\s()\-]+", value) or not 10 <= len(digits) <= 15:
         raise ValidationError(
-            "Enter a phone number: 10–15 digits, e.g. +380 67 123 45 67."
+            _("Enter a phone number: 10–15 digits, e.g. +380 67 123 45 67.")
         )
     return ("+" if value.startswith("+") else "") + digits

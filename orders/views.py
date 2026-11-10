@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Sum
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
 from django.views.generic import ListView
 
@@ -25,7 +26,7 @@ def checkout(request):
     """
     cart = Cart(request)
     if not cart:
-        messages.info(request, "Your cart is empty.")
+        messages.info(request, _("Your cart is empty."))
         return redirect("cart:detail")
 
     if request.method == "POST":
@@ -58,8 +59,11 @@ def checkout(request):
                 request.user.save(update_fields=["phone", "address"])
             messages.success(
                 request,
-                f"{order} is created, the books are reserved for you. "
-                "Pay for it with the “Pay” button.",
+                _(
+                    "%(order)s is created, the books are reserved for you. "
+                    "Pay for it with the “Pay” button."
+                )
+                % {"order": order},
             )
             # To the order page, not straight to Stripe: the customer sees the
             # created order first and pays with the "Pay" button
@@ -126,5 +130,7 @@ def order_cancel(request, pk):
         for text in error.messages:
             messages.error(request, text)
     else:
-        messages.success(request, f"{order} is cancelled. The books are back in stock.")
+        messages.success(
+            request, _("%(order)s is cancelled. The books are back in stock.") % {"order": order}
+        )
     return redirect("orders:detail", pk=pk)

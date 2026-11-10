@@ -3,6 +3,8 @@ from decimal import Decimal
 from django.contrib import admin, messages
 from django.db.models import DecimalField, OuterRef, Subquery, Sum, Value
 from django.db.models.functions import Coalesce
+from django.utils.translation import gettext
+from django.utils.translation import gettext_lazy as _
 
 from payments.admin import ManualPaymentFormSet, ManualPaymentInline, PaymentInline
 from payments.models import Payment
@@ -42,7 +44,7 @@ class OrderItemInline(admin.TabularInline):
     def has_delete_permission(self, request, obj=None):
         return False
 
-    @admin.display(description="cost")
+    @admin.display(description=_("cost"))
     def cost(self, obj):
         # An empty (unsaved) row has no price yet
         return obj.cost if obj.pk else ""
@@ -87,7 +89,7 @@ class OrderAdmin(admin.ModelAdmin):
     fieldsets = [
         (None, {"fields": ["user", "status"]}),
         (
-            "Payment",
+            _("Payment"),
             {
                 "fields": [
                     "payment_status",
@@ -98,8 +100,8 @@ class OrderAdmin(admin.ModelAdmin):
                 ]
             },
         ),
-        ("Delivery", {"fields": ["full_name", "phone", "address"]}),
-        ("Timestamps", {"fields": ["created_at", "updated_at"], "classes": ["collapse"]}),
+        (_("Delivery"), {"fields": ["full_name", "phone", "address"]}),
+        (_("Timestamps"), {"fields": ["created_at", "updated_at"], "classes": ["collapse"]}),
     ]
 
     # Orders are created only at checkout and never deleted (financial
@@ -145,21 +147,21 @@ class OrderAdmin(admin.ModelAdmin):
     # Columns and read-only fields
     # ------------------------------------------------------------------
 
-    @admin.display(description="paid", ordering="paid_sum")
+    @admin.display(description=_("paid"), ordering="paid_sum")
     def paid_percent_column(self, obj):
         if obj.total <= 0:
             return "100%"
         return f"{min(int(obj.paid_sum * 100 / obj.total), 100)}%"
 
-    @admin.display(description="paid amount")
+    @admin.display(description=_("paid amount"))
     def paid_amount_display(self, obj):
-        return f"{obj.paid_amount} UAH"
+        return gettext("%(amount)s UAH") % {"amount": obj.paid_amount}
 
-    @admin.display(description="amount due")
+    @admin.display(description=_("amount due"))
     def amount_due_display(self, obj):
-        return f"{obj.amount_due} UAH"
+        return gettext("%(amount)s UAH") % {"amount": obj.amount_due}
 
-    @admin.display(description="paid, %")
+    @admin.display(description=_("paid, %"))
     def paid_percent_display(self, obj):
         return f"{obj.paid_percent}%"
 
@@ -214,8 +216,11 @@ class OrderAdmin(admin.ModelAdmin):
                 formset.new_objects.append(payment)
                 messages.success(
                     request,
-                    f"Manual payment {payment.amount} UAH recorded, "
-                    f"the order is {payment.order.get_payment_status_display().lower()} now.",
+                    gettext("Manual payment %(amount)s UAH recorded, the order is %(status)s now.")
+                    % {
+                        "amount": payment.amount,
+                        "status": payment.order.get_payment_status_display().lower(),
+                    },
                 )
 
     # ------------------------------------------------------------------
@@ -229,13 +234,18 @@ class OrderAdmin(admin.ModelAdmin):
             for text in error.messages:
                 messages.error(request, text)
             return False
-        messages.success(request, f"{order} is cancelled, the books are back in stock.")
+        messages.success(
+            request, gettext("%(order)s is cancelled, the books are back in stock.") % {"order": order}
+        )
         if order.payment_status != Order.PaymentStatus.UNPAID:
-            messages.warning(request, f"{order} has payments: return the money to the customer.")
+            messages.warning(
+                request,
+                gettext("%(order)s has payments: return the money to the customer.") % {"order": order},
+            )
         return True
 
     @admin.action(
-        description="Cancel selected orders (books go back to stock)",
+        description=_("Cancel selected orders (books go back to stock)"),
         permissions=["change"],
     )
     def cancel_selected(self, request, queryset):

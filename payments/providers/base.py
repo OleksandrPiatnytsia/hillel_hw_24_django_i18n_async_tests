@@ -1,5 +1,7 @@
 from dataclasses import dataclass
 
+from django.utils.translation import gettext as _
+
 
 class PaymentProviderError(Exception):
     """The provider can't do the operation; the text can be shown to the user."""
@@ -46,7 +48,7 @@ class PaymentProvider:
 
         Raises PaymentProviderError if the provider refuses or is unreachable.
         """
-        raise PaymentProviderError(f"{self.name}: online payment is not supported.")
+        raise PaymentProviderError(_("%(provider)s: online payment is not supported.") % {"provider": self.name})
 
     def fetch_status(self, payment):
         """Ask the provider about the payment; return a Payment.Status value.
@@ -70,4 +72,4 @@ class PaymentProvider:
         Must check that the request really comes from the provider
         (signature) before trusting its data.
         """
-        raise PaymentProviderError(f"{self.name}: webhooks are not supported.")
+        raise PaymentProviderError(_("%(provider)s: webhooks are not supported.") % {"provider": self.name})

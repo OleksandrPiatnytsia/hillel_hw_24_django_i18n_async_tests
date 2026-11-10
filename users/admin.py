@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.utils.translation import gettext_lazy as _
 
 from .models import User
 
@@ -16,8 +17,8 @@ class UserAdmin(BaseUserAdmin):
     # The edit page: the built-in sections + the delivery details
     fieldsets = (
         *BaseUserAdmin.fieldsets,
-        ("Delivery details", {"fields": ("phone", "address")}),
-        ("Language", {"fields": ("language",)}),
+        (_("Delivery details"), {"fields": ("phone", "address")}),
+        (_("Language"), {"fields": ("language",)}),
     )
 
     add_fieldsets = (

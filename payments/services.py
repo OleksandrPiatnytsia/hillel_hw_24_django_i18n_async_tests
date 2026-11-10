@@ -17,6 +17,7 @@ from decimal import Decimal
 
 from django.db import transaction
 from django.utils import timezone
+from django.utils.translation import gettext as _
 
 from orders.models import Order
 
@@ -45,15 +46,18 @@ def record_manual_payment(order_id, amount, *, note="", recorded_by=None):
     """
     amount = Decimal(amount)
     if amount <= 0:
-        raise PaymentError("The amount must be greater than 0.")
+        raise PaymentError(_("The amount must be greater than 0."))
 
     with transaction.atomic():
         order = _lock_order(order_id)
         if order.status == Order.Status.CANCELLED:
-            raise PaymentError(f"{order} is cancelled, payments can't be added.")
+            raise PaymentError(_("%(order)s is cancelled, payments can't be added.") % {"order": order})
         due = order.amount_due
         if amount > due:
-            raise PaymentError(f"{order}: only {due} UAH is due, {amount} UAH is too much.")
+            raise PaymentError(
+                _("%(order)s: only %(due)s UAH is due, %(amount)s UAH is too much.")
+                % {"order": order, "due": due, "amount": amount}
+            )
 
         payment = Payment.objects.create(
             order=order,
@@ -184,12 +188,12 @@ def start_online_payment(order_id, user, request):
     with transaction.atomic():
         order = _lock_order(order_id)
         if order.user_id != user.pk:
-            raise PaymentError("Order not found.")
+            raise PaymentError(_("Order not found."))
         if order.status == Order.Status.CANCELLED:
-            raise PaymentError(f"{order} is cancelled.")
+            raise PaymentError(_("%(order)s is cancelled.") % {"order": order})
         due = order.amount_due
         if due <= 0:
-            raise PaymentError(f"{order} is already paid.")
+            raise PaymentError(_("%(order)s is already paid.") % {"order": order})
 
         now = timezone.now()
         for payment in order.payments.filter(
@@ -201,7 +205,7 @@ def start_online_payment(order_id, user, request):
                 # Created a moment ago by another click, the request to the
                 # provider is still running: no second page
                 if payment.created_at > now - timedelta(minutes=1):
-                    raise PaymentError("The payment is being prepared, please try again in a minute.")
+                    raise PaymentError(_("The payment is being prepared, please try again in a minute."))
                 continue
             if payment.amount == due and expires_at > (now + MIN_TIME_LEFT_ON_PAGE).timestamp():
                 logger.info("Payment %s: reusing the open payment page", payment.pk)

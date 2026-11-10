@@ -9,6 +9,8 @@ from functools import partial
 
 from django.db import transaction
 from django.db.models import F
+from django.utils.translation import gettext as _
+from django.utils.translation import ngettext
 
 from books.models import Book
 
@@ -45,7 +47,7 @@ def create_order(user, quantities, *, full_name, phone, address):
     database stays unchanged then.
     """
     if not quantities:
-        raise OrderError("The cart is empty.")
+        raise OrderError(_("The cart is empty."))
 
     with transaction.atomic():
         # select_for_update(): other transactions that want to lock or
@@ -72,13 +74,21 @@ def create_order(user, quantities, *, full_name, phone, address):
         for book_id, quantity in quantities.items():
             book = books.get(book_id)
             if book is None:
-                problems.append("A book from your cart is no longer sold.")
+                problems.append(_("A book from your cart is no longer sold."))
             elif book.stock < quantity:
                 if book.stock == 0:
-                    problems.append(f"“{book.title}” is out of stock.")
+                    problems.append(_("“%(title)s” is out of stock.") % {"title": book.title})
                 else:
+                    # ngettext: the form depends on the number. Ukrainian
+                    # has three ("залишився 1 примірник", "2 примірники",
+                    # "5 примірників"), English two; the .po file holds them all
                     problems.append(
-                        f"“{book.title}”: only {book.stock} left, you ordered {quantity}."
+                        ngettext(
+                            "“%(title)s”: only %(stock)s copy left, you ordered %(quantity)s.",
+                            "“%(title)s”: only %(stock)s copies left, you ordered %(quantity)s.",
+                            book.stock,
+                        )
+                        % {"title": book.title, "stock": book.stock, "quantity": quantity}
                     )
         if problems:
             # Leaving the "with" block with an exception = ROLLBACK
@@ -151,16 +161,16 @@ def cancel_order(order_id, *, user=None, only_unpaid=False):
         if user is not None:
             if order.user_id != user.pk:
                 # Same text as for a missing order: don't reveal that it exists
-                raise OrderError("Order not found.")
+                raise OrderError(_("Order not found."))
             if not order.can_be_cancelled_by_customer:
-                raise OrderError(f"{order} can't be cancelled any more.")
+                raise OrderError(_("%(order)s can't be cancelled any more.") % {"order": order})
         if order.status == Order.Status.CANCELLED:
-            raise OrderError(f"{order} is already cancelled.")
+            raise OrderError(_("%(order)s is already cancelled.") % {"order": order})
         if only_unpaid and not (
             order.status == Order.Status.NEW
             and order.payment_status == Order.PaymentStatus.UNPAID
         ):
-            raise OrderError(f"{order} is not a new unpaid order any more.")
+            raise OrderError(_("%(order)s is not a new unpaid order any more.") % {"order": order})
 
         # Return the reserved copies. F("stock") + n: the addition happens
         # in SQL (UPDATE ... SET stock = stock + n), on the current value.

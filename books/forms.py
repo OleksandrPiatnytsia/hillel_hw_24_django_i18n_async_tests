@@ -1,6 +1,8 @@
 from django import forms
 from django.core.files.uploadedfile import UploadedFile
 from django.core.validators import FileExtensionValidator
+from django.utils.text import format_lazy
+from django.utils.translation import gettext_lazy as _
 
 from .models import Author, Book, BookQuerySet, Category
 
@@ -33,10 +35,11 @@ class BookForm(forms.ModelForm):
             "cover",
         ]
         help_texts = {
-            "author": "New authors are added in the admin.",
-            "cover": (
-                f"JPG, PNG or WebP, up to {COVER_MAX_SIZE_MB} MB. "
-                "Without a cover a placeholder is shown."
+            "author": _("New authors are added in the admin."),
+            # format_lazy: translated first, the number is put in after
+            "cover": format_lazy(
+                _("JPG, PNG or WebP, up to {size} MB. Without a cover a placeholder is shown."),
+                size=COVER_MAX_SIZE_MB,
             ),
         }
         widgets = {
@@ -73,7 +76,7 @@ class BookForm(forms.ModelForm):
             # (current stock, or the model default 0 for a new book) — so
             # editing the HTML in DevTools doesn't help
             stock.disabled = True
-            stock.help_text = "Only users with the “manage stock” permission can change it."
+            stock.help_text = _("Only users with the “manage stock” permission can change it.")
 
     def clean_cover(self):
         """Extra checks on top of ImageField (which already verifies via Pillow
@@ -86,7 +89,8 @@ class BookForm(forms.ModelForm):
             if cover.size > COVER_MAX_SIZE_MB * 1024 * 1024:
                 size_mb = cover.size / (1024 * 1024)
                 raise forms.ValidationError(
-                    f"The file is {size_mb:.1f} MB, the limit is {COVER_MAX_SIZE_MB} MB."
+                    _("The file is %(size).1f MB, the limit is %(limit)s MB."),
+                    params={"size": size_mb, "limit": COVER_MAX_SIZE_MB},
                 )
         return cover
 
@@ -95,56 +99,58 @@ class BookFilterForm(forms.Form):
     """GET filters for the book catalog. All fields are optional."""
 
     SORT_CHOICES = [
-        ("title", "Title A→Z"),
-        ("-title", "Title Z→A"),
-        ("author__name", "Author A→Z"),
-        ("price", "Price: low to high"),
-        ("-price", "Price: high to low"),
-        ("-created_at", "Newest first"),
+        ("title", _("Title A→Z")),
+        ("-title", _("Title Z→A")),
+        ("author__name", _("Author A→Z")),
+        ("price", _("Price: low to high")),
+        ("-price", _("Price: high to low")),
+        ("-created_at", _("Newest first")),
     ]
 
     q = forms.CharField(
         required=False,
-        label="Search",
+        label=_("Search"),
         widget=forms.TextInput(
-            attrs={"class": "form-control", "placeholder": "Title or author"}
+            attrs={"class": "form-control", "placeholder": _("Title or author")}
         ),
     )
     category = forms.ModelChoiceField(
         queryset=Category.objects.all(),
         required=False,
         to_field_name="slug",  # ?category=fantasy instead of ?category=3
-        empty_label="All categories",
+        label=_("Category"),
+        empty_label=_("All categories"),
         widget=forms.Select(attrs={"class": "form-select"}),
     )
     author = forms.ModelChoiceField(
         queryset=Author.objects.all(),
         required=False,  # ?author=<pk>
-        empty_label="All authors",
+        label=_("Author"),
+        empty_label=_("All authors"),
         widget=forms.Select(attrs={"class": "form-select"}),
     )
     stock = forms.ChoiceField(
-        choices=[("", "Any")] + BookQuerySet.STOCK_STATUS_CHOICES,
+        choices=[("", _("Any"))] + BookQuerySet.STOCK_STATUS_CHOICES,
         required=False,
-        label="Availability",
+        label=_("Availability"),
         widget=forms.Select(attrs={"class": "form-select"}),
     )
     price_min = forms.DecimalField(
         required=False,
         min_value=0,
-        label="Price from",
+        label=_("Price from"),
         widget=forms.NumberInput(attrs={"class": "form-control", "step": "0.01"}),
     )
     price_max = forms.DecimalField(
         required=False,
         min_value=0,
-        label="Price to",
+        label=_("Price to"),
         widget=forms.NumberInput(attrs={"class": "form-control", "step": "0.01"}),
     )
     sort = forms.ChoiceField(
         choices=SORT_CHOICES,
         required=False,
-        label="Sort by",
+        label=_("Sort by"),
         widget=forms.Select(attrs={"class": "form-select"}),
     )
 
@@ -153,5 +159,5 @@ class BookFilterForm(forms.Form):
         price_min = cleaned_data.get("price_min")
         price_max = cleaned_data.get("price_max")
         if price_min is not None and price_max is not None and price_min > price_max:
-            raise forms.ValidationError("“Price from” can't be greater than “Price to”.")
+            raise forms.ValidationError(_("“Price from” can't be greater than “Price to”."))
         return cleaned_data

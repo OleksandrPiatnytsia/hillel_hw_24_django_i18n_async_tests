@@ -10,6 +10,8 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import redirect, resolve_url
 from django.urls import reverse_lazy
 from django.utils import translation
+from django.utils.translation import gettext
+from django.utils.translation import gettext_lazy as _
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.generic import CreateView, TemplateView, UpdateView
 
@@ -34,8 +36,8 @@ class UserLoginView(SuccessMessageMixin, LoginView):
     form_class = LoginForm
     # A logged-in user who opens /accounts/login/ is sent away right away
     redirect_authenticated_user = True
-    success_message = "Welcome back, %(username)s!"
-    extra_context = {"title": "Log in", "submit_label": "Log in"}
+    success_message = _("Welcome back, %(username)s!")
+    extra_context = {"title": _("Log in"), "submit_label": _("Log in")}
 
     def form_valid(self, form):
         """Log in, then switch the site to the language saved in the profile.
@@ -57,7 +59,7 @@ class UserLogoutView(LogoutView):
         response = super().post(request, *args, **kwargs)
         # Added after logout(): the session is already flushed, but the
         # message storage still works for this response
-        messages.info(request, "You have been logged out.")
+        messages.info(request, gettext("You have been logged out."))
         return response
 
 
@@ -66,8 +68,8 @@ class SignUpView(SuccessMessageMixin, CreateView):
 
     form_class = SignUpForm
     template_name = "users/auth_form.html"
-    success_message = "Account created. Welcome, %(username)s!"
-    extra_context = {"title": "Sign up", "submit_label": "Create account"}
+    success_message = _("Account created. Welcome, %(username)s!")
+    extra_context = {"title": _("Sign up"), "submit_label": _("Create account")}
 
     def dispatch(self, request, *args, **kwargs):
         # Same as redirect_authenticated_user in LoginView
@@ -145,7 +147,7 @@ class ProfileEditView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     form_class = ProfileForm
     template_name = "users/profile_edit.html"
     success_url = reverse_lazy("users:profile")
-    success_message = "Your profile is saved."
+    success_message = _("Your profile is saved.")
 
     def get_object(self, queryset=None):
         return self.request.user

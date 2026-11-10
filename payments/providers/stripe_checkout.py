@@ -16,6 +16,7 @@ import stripe
 from django.conf import settings
 from django.http import HttpResponse
 from django.urls import reverse
+from django.utils.translation import gettext as _
 
 from .base import PaymentProvider, PaymentProviderError, ProviderSession
 
@@ -41,7 +42,7 @@ class StripeProvider(PaymentProvider):
 
     def _client(self):
         if not settings.STRIPE_SECRET_KEY:
-            raise PaymentProviderError("Online payment is not configured.")
+            raise PaymentProviderError(_("Online payment is not configured."))
         # max_network_retries: repeats a request after a network error.
         # Safe for creating sessions because of the idempotency key below.
         return stripe.StripeClient(settings.STRIPE_SECRET_KEY, max_network_retries=2)
@@ -65,7 +66,9 @@ class StripeProvider(PaymentProvider):
                                 "currency": CURRENCY,
                                 "unit_amount": to_minor_units(payment.amount),
                                 "product_data": {
-                                    "name": f"Bookstore: order #{order.pk}",
+                                    # In the language of the customer
+                                    # pressing "Pay" (the active one)
+                                    "name": _("Bookstore: order #%(number)s") % {"number": order.pk},
                                     "description": titles[:250],
                                 },
                             },
@@ -99,7 +102,7 @@ class StripeProvider(PaymentProvider):
         except stripe.StripeError as error:
             logger.exception("Stripe: can't create a Checkout Session for payment %s", payment.pk)
             raise PaymentProviderError(
-                "The payment service is not available now, please try again later."
+                _("The payment service is not available now, please try again later.")
             ) from error
 
         return ProviderSession(external_id=session.id, url=session.url, expires_at=session.expires_at)
@@ -118,7 +121,7 @@ class StripeProvider(PaymentProvider):
             session = self._client().v1.checkout.sessions.retrieve(payment.external_id)
         except stripe.StripeError as error:
             logger.exception("Stripe: can't read session %s", payment.external_id)
-            raise PaymentProviderError("Can't check the payment now.") from error
+            raise PaymentProviderError(_("Can't check the payment now.")) from error
 
         if session.payment_status == "paid":
             return Payment.Status.SUCCEEDED
@@ -136,7 +139,7 @@ class StripeProvider(PaymentProvider):
             return self.fetch_status(payment) != "succeeded"
         except stripe.StripeError as error:
             logger.exception("Stripe: can't expire session %s", payment.external_id)
-            raise PaymentProviderError("Can't close the payment page now.") from error
+            raise PaymentProviderError(_("Can't close the payment page now.")) from error
         return True
 
     # ------------------------------------------------------------------

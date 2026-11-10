@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils.translation import gettext as _
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
@@ -54,7 +55,7 @@ def payment_cancelled(request, payment_id):
     payment = get_object_or_404(Payment, pk=payment_id, order__user=request.user)
     messages.info(
         request,
-        "The payment was not completed. You can pay later with the “Pay” button.",
+        _("The payment was not completed. You can pay later with the “Pay” button."),
     )
     return redirect("orders:detail", pk=payment.order_id)
 

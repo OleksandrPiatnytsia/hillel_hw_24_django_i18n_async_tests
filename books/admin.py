@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.db.models import Count
 from django.utils.html import format_html
+from django.utils.translation import gettext_lazy as _
 
 from .models import Author, Book, BookCategory, BookQuerySet, Category
 
@@ -24,8 +25,8 @@ class BookCategoryInline(BaseBookCategoryInline):
 
     extra = 1
     autocomplete_fields = ["category"]
-    verbose_name = "category"
-    verbose_name_plural = "categories"
+    verbose_name = _("category")
+    verbose_name_plural = _("categories")
 
 
 class CategoryBookInline(BaseBookCategoryInline):
@@ -33,8 +34,8 @@ class CategoryBookInline(BaseBookCategoryInline):
 
     extra = 0
     autocomplete_fields = ["book"]
-    verbose_name = "book"
-    verbose_name_plural = "books"
+    verbose_name = _("book")
+    verbose_name_plural = _("books")
 
 
 # ---------------------------------------------------------------------------
@@ -43,7 +44,7 @@ class CategoryBookInline(BaseBookCategoryInline):
 
 
 class StockStatusFilter(admin.SimpleListFilter):
-    title = "stock status"
+    title = _("stock status")
     parameter_name = "stock_status"
 
     def lookups(self, request, model_admin):
@@ -70,7 +71,7 @@ class CategoryAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         return super().get_queryset(request).annotate(books_count=Count("books"))
 
-    @admin.display(description="books", ordering="books_count")
+    @admin.display(description=_("books"), ordering="books_count")
     def books_count(self, obj):
         return obj.books_count
 
@@ -86,7 +87,7 @@ class AuthorAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         return super().get_queryset(request).annotate(books_count=Count("books"))
 
-    @admin.display(description="books", ordering="books_count")
+    @admin.display(description=_("books"), ordering="books_count")
     def books_count(self, obj):
         return obj.books_count
 
@@ -115,10 +116,10 @@ class BookAdmin(admin.ModelAdmin):
     inlines = [BookCategoryInline]
     fieldsets = [
         (None, {"fields": ["title", "author", "description"]}),
-        ("Cover", {"fields": ["cover_preview", "cover"]}),
-        ("Sales", {"fields": ["price", "stock"]}),
+        (_("Cover"), {"fields": ["cover_preview", "cover"]}),
+        (_("Sales"), {"fields": ["price", "stock"]}),
         (
-            "Timestamps",
+            _("Timestamps"),
             {"fields": ["created_at", "updated_at"], "classes": ["collapse"]},
         ),
     ]
@@ -143,18 +144,18 @@ class BookAdmin(admin.ModelAdmin):
             width,
         )
 
-    @admin.display(description="cover")
+    @admin.display(description=_("cover"))
     def cover_thumbnail(self, obj):
         return self._cover_img(obj, 40)
 
-    @admin.display(description="current cover")
+    @admin.display(description=_("current cover"))
     def cover_preview(self, obj):
         return self._cover_img(obj, 160)
 
-    @admin.display(description="categories")
+    @admin.display(description=_("categories"))
     def category_list(self, obj):
         return ", ".join(category.name for category in obj.categories.all())
 
-    @admin.display(description="available", boolean=True, ordering="stock")
+    @admin.display(description=_("available"), boolean=True, ordering="stock")
     def is_available(self, obj):
         return obj.stock > 0

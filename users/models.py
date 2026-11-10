@@ -22,17 +22,17 @@ class User(AbstractUser):
     # "Ann@Mail.com" and "ann@mail.com" are the same email, and plain
     # unique=True is enough to allow only one account per email.
     email = models.EmailField(
-        "email address",
+        _("email address"),
         unique=True,
-        error_messages={"unique": "A user with this email already exists."},
+        error_messages={"unique": _("A user with this email already exists.")},
     )
 
     # Delivery details for the checkout form: filled in on the profile page
     # (or saved from the checkout), copied into every new order as its
     # prefilled values. Optional: a new user has none yet.
     # The name comes from first_name / last_name (AbstractUser).
-    phone = models.CharField("phone", max_length=30, blank=True)
-    address = models.TextField("delivery address", blank=True)
+    phone = models.CharField(_("phone"), max_length=30, blank=True)
+    address = models.TextField(_("delivery address"), blank=True)
 
     # The language the user chose with the switcher in the navbar (saved by
     # config.views.set_language). Used where there is no request to take

@@ -4,6 +4,8 @@ from django.conf import settings
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.urls import reverse
+from django.utils.translation import gettext
+from django.utils.translation import gettext_lazy as _
 
 
 class Order(models.Model):
@@ -20,25 +22,29 @@ class Order(models.Model):
     class Status(models.TextChoices):
         # TextChoices: the first value is stored in the database, the second
         # is the label for forms and the admin (order.get_status_display())
-        NEW = "new", "New"
-        PROCESSING = "processing", "Processing"
-        SHIPPED = "shipped", "Shipped"
-        COMPLETED = "completed", "Completed"
-        CANCELLED = "cancelled", "Cancelled"
+        # The labels are lazy: get_status_display() shows them in the
+        # language of the request. The stored values ("new") never change.
+        NEW = "new", _("New")
+        PROCESSING = "processing", _("Processing")
+        SHIPPED = "shipped", _("Shipped")
+        COMPLETED = "completed", _("Completed")
+        CANCELLED = "cancelled", _("Cancelled")
 
     class PaymentStatus(models.TextChoices):
-        UNPAID = "unpaid", "Unpaid"
-        PARTIALLY_PAID = "partially_paid", "Partially paid"
-        PAID = "paid", "Paid"
+        UNPAID = "unpaid", _("Unpaid")
+        PARTIALLY_PAID = "partially_paid", _("Partially paid")
+        PAID = "paid", _("Paid")
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
+        verbose_name=_("user"),
         # PROTECT: an order is a financial record, it must outlive any
         # attempt to delete its user (deactivate the user instead)
         on_delete=models.PROTECT,
         related_name="orders",  # user.orders.all() -> "My orders"
     )
     status = models.CharField(
+        _("status"),
         max_length=20,
         choices=Status,
         default=Status.NEW,
@@ -48,6 +54,7 @@ class Order(models.Model):
     # of succeeded payments: 0 -> unpaid, less than total -> partially_paid,
     # total or more -> paid.
     payment_status = models.CharField(
+        _("payment status"),
         max_length=20,
         choices=PaymentStatus,
         default=PaymentStatus.UNPAID,
@@ -55,23 +62,26 @@ class Order(models.Model):
 
     # Delivery data from the checkout form. A copy, not a link to the user's
     # profile: a later profile change must not change an old order.
-    full_name = models.CharField(max_length=255)
-    phone = models.CharField(max_length=30)
-    address = models.TextField()
+    full_name = models.CharField(_("full name"), max_length=255)
+    phone = models.CharField(_("phone"), max_length=30)
+    address = models.TextField(_("delivery address"))
 
     # Sum of the items (price * quantity), in UAH. Stored: the price of a book
     # may change later, the order must keep the sum the user agreed to pay.
     total = models.DecimalField(
+        _("total"),
         max_digits=10,
         decimal_places=2,
         default=Decimal("0.00"),
         validators=[MinValueValidator(Decimal("0.00"))],
     )
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(_("created at"), auto_now_add=True)
+    updated_at = models.DateTimeField(_("updated at"), auto_now=True)
 
     class Meta:
         ordering = ["-created_at"]  # newest first
+        verbose_name = _("order")
+        verbose_name_plural = _("orders")
         constraints = [
             # Validators run only in forms (full_clean); the constraint also
             # protects against code and SQL that skip them
@@ -82,7 +92,9 @@ class Order(models.Model):
         ]
 
     def __str__(self):
-        return f"Order #{self.pk}"
+        # gettext (not lazy): str(order) is built right now, in the active
+        # language: "Замовлення #5" / "Order #5" in messages and emails
+        return gettext("Order #%(number)s") % {"number": self.pk}
 
     def get_absolute_url(self):
         return reverse("orders:detail", kwargs={"pk": self.pk})
@@ -167,12 +179,14 @@ class OrderItem(models.Model):
 
     order = models.ForeignKey(
         Order,
+        verbose_name=_("order"),
         # CASCADE: an item has no meaning without its order
         on_delete=models.CASCADE,
         related_name="items",  # order.items.all()
     )
     book = models.ForeignKey(
         "books.Book",
+        verbose_name=_("book"),
         # PROTECT: a book that was ever ordered can't be deleted
         # (set stock to 0 instead), the order history stays complete
         on_delete=models.PROTECT,
@@ -181,18 +195,22 @@ class OrderItem(models.Model):
     # Copies of the book data at the moment of ordering: if the title or the
     # price of the book changes later, the old order still shows what was
     # actually bought and for how much
-    title = models.CharField(max_length=255)
+    title = models.CharField(_("title"), max_length=255)
     price = models.DecimalField(
+        _("price"),
         max_digits=10,
         decimal_places=2,
         validators=[MinValueValidator(Decimal("0.00"))],
     )
     quantity = models.PositiveIntegerField(
+        _("quantity"),
         # PositiveIntegerField allows 0; an item with 0 books makes no sense
         validators=[MinValueValidator(1)],
     )
 
     class Meta:
+        verbose_name = _("order item")
+        verbose_name_plural = _("order items")
         constraints = [
             # One line per book in an order: 3 books = quantity 3, not 3 lines
             models.UniqueConstraint(

@@ -2,6 +2,8 @@ from django import forms
 from django.contrib import admin
 from django.core.exceptions import ValidationError
 from django.forms.models import BaseInlineFormSet
+from django.utils.translation import gettext
+from django.utils.translation import gettext_lazy as _
 
 from .models import Payment
 
@@ -22,7 +24,7 @@ class PaymentInline(admin.TabularInline):
     fields = ["created_at", "provider", "amount", "status", "paid_at", "external_id", "note"]
     readonly_fields = fields
     extra = 0
-    verbose_name_plural = "payments"
+    verbose_name_plural = _("payments")
 
     # No add / change / delete -> Django shows the rows as plain text
     def has_add_permission(self, request, obj=None):
@@ -34,7 +36,7 @@ class PaymentInline(admin.TabularInline):
     def has_delete_permission(self, request, obj=None):
         return False
 
-    @admin.display(description="note")
+    @admin.display(description=_("note"))
     def note(self, obj):
         return obj.details.get("note", "")
 
@@ -43,9 +45,10 @@ class ManualPaymentForm(forms.ModelForm):
     """One new manual payment: amount + a note (stored in Payment.details)."""
 
     note = forms.CharField(
+        label=_("note"),
         required=False,
         max_length=255,
-        help_text="cash on delivery, bank transfer #…",
+        help_text=_("cash on delivery, bank transfer #…"),
     )
 
     class Meta:
@@ -67,11 +70,12 @@ class ManualPaymentFormSet(BaseInlineFormSet):
         if not amounts:
             return
         if order.status == order.Status.CANCELLED:
-            raise ValidationError("The order is cancelled, payments can't be added.")
+            raise ValidationError(gettext("The order is cancelled, payments can't be added."))
         due = order.amount_due
         if sum(amounts) > due:
             raise ValidationError(
-                f"Only {due} UAH is due, the new payments add up to {sum(amounts)} UAH."
+                gettext("Only %(due)s UAH is due, the new payments add up to %(sum)s UAH.")
+                % {"due": due, "sum": sum(amounts)}
             )
 
 
@@ -90,8 +94,8 @@ class ManualPaymentInline(admin.TabularInline):
     fields = ["amount", "note"]
     extra = 0
     can_delete = False
-    verbose_name = "manual payment"
-    verbose_name_plural = "add a manual payment (money received outside the site)"
+    verbose_name = _("manual payment")
+    verbose_name_plural = _("add a manual payment (money received outside the site)")
 
     def get_queryset(self, request):
         return super().get_queryset(request).none()

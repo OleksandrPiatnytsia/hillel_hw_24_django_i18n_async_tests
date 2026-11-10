@@ -4,6 +4,8 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Count, Q
 from django.urls import reverse_lazy
+from django.utils.translation import gettext
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import (
     CreateView,
     DeleteView,
@@ -136,7 +138,7 @@ class BookCreateView(
     permission_required = "books.add_book"
     model = Book
     form_class = BookForm
-    success_message = "Book “%(title)s” was created."
+    success_message = _("Book “%(title)s” was created.")
 
     def form_valid(self, form):
         response = super().form_valid(form)  # saves -> self.object has a pk
@@ -158,7 +160,7 @@ class BookUpdateView(
     permission_required = "books.change_book"
     model = Book
     form_class = BookForm
-    success_message = "Book “%(title)s” was updated."
+    success_message = _("Book “%(title)s” was updated.")
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -201,7 +203,7 @@ class BookDeleteView(PermissionRequiredMixin, SuccessMessageMixin, DeleteView):
 
     def get_success_message(self, cleaned_data):
         # Delete form has no fields, so take the title from the deleted object
-        return f"Book “{self.object.title}” was deleted."
+        return gettext("Book “%(title)s” was deleted.") % {"title": self.object.title}
 
 
 # ---------------------------------------------------------------------------

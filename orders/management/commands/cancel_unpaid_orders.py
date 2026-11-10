@@ -18,6 +18,8 @@ from datetime import timedelta
 
 from django.core.management.base import BaseCommand, CommandError
 from django.utils import timezone
+from django.utils.translation import gettext as _
+from django.utils.translation import ngettext
 
 from orders.models import Order
 from orders.services import OrderError, cancel_order
@@ -59,7 +61,7 @@ class Command(BaseCommand):
         if age < timedelta(minutes=30):
             # A Stripe payment page lives 31 minutes: a younger order may be
             # being paid right now
-            raise CommandError("--older-than must be at least 30m.")
+            raise CommandError(_("--older-than must be at least 30m."))
         border = timezone.now() - age
 
         orders = Order.objects.filter(
@@ -70,8 +72,24 @@ class Command(BaseCommand):
 
         if options["dry_run"]:
             for order in orders:
-                self.stdout.write(f"would cancel {order} from {order.created_at:%d.%m.%Y %H:%M} ({order.total} UAH)")
-            self.stdout.write(f"{orders.count()} order(s), nothing changed (--dry-run).")
+                # Not an f-string: it would put the values in BEFORE _(), so
+                # gettext would look for "would cancel Order #5 from ..." in
+                # the .po file and never find it (and makemessages skips
+                # f-strings). The template with %(name)s is translated first,
+                # the values are put in after (% {...}).
+                self.stdout.write(
+                    _("would cancel %(order)s from %(date)s (%(total)s UAH)")
+                    % {"order": order, "date": f"{order.created_at:%d.%m.%Y %H:%M}", "total": order.total}
+                )
+            count = orders.count()
+            self.stdout.write(
+                ngettext(
+                    "%(count)s order, nothing changed (--dry-run).",
+                    "%(count)s orders, nothing changed (--dry-run).",
+                    count,
+                )
+                % {"count": count}
+            )
             return
 
         cancelled = skipped = 0
@@ -83,12 +101,16 @@ class Command(BaseCommand):
                 cancel_order(order_id, only_unpaid=True)
             except OrderError as error:
                 skipped += 1
-                self.stdout.write(self.style.WARNING(f"skipped: {error}"))
+                self.stdout.write(self.style.WARNING(_("skipped: %(error)s") % {"error": error}))
                 continue
             cancelled += 1
-            self.stdout.write(f"cancelled Order #{order_id}")
+            self.stdout.write(_("cancelled: order #%(number)s") % {"number": order_id})
             logger.info("Order #%s cancelled: unpaid for more than %s", order_id, age)
 
         self.stdout.write(
-            self.style.SUCCESS(f"Cancelled {cancelled} order(s), skipped {skipped}.")
+            # "Cancelled: 3" instead of "Cancelled 3 order(s)": no plural forms needed
+            self.style.SUCCESS(
+                _("Cancelled: %(cancelled)s, skipped: %(skipped)s.")
+                % {"cancelled": cancelled, "skipped": skipped}
+            )
         )
