@@ -13,3 +13,6 @@ pytest-asyncio==1.4.1.post1
 pytest-cov==7.1.0
 # Test data: model factories (tests/factories.py); brings Faker with it
 factory-boy==3.3.3
+# Reads .po / .mo files: the test that every text is translated and
+# compiled (tests/unit/test_translation_catalog.py)
+polib==1.2.0

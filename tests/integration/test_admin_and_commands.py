@@ -193,3 +193,42 @@ def test_cancel_unpaid_orders_dry_run_changes_nothing(old_orders, book):
 def test_cancel_unpaid_orders_refuses_too_short_age():
     with pytest.raises(CommandError):
         run_command("--older-than", "10m")
+
+
+# ---------------------------------------------------------------------------
+# seed_books and book_stats
+# ---------------------------------------------------------------------------
+
+
+def test_seed_books_fills_the_catalog_and_is_safe_to_run_again():
+    from books.models import Author, Book, Category
+
+    call_command("seed_books", stdout=StringIO())
+    counts = (Category.objects.count(), Author.objects.count(), Book.objects.count())
+    call_command("seed_books", stdout=StringIO())  # the second run adds nothing
+
+    assert counts == (5, 10, 12)  # Tolkien and King have two books each
+    assert (Category.objects.count(), Author.objects.count(), Book.objects.count()) == counts
+    assert Book.objects.get(title="Хоббіт").categories.count() == 2
+
+
+def test_book_stats_prints_every_section_and_sql_on_request():
+    call_command("seed_books", stdout=StringIO())
+    out = StringIO()
+
+    call_command("book_stats", "--max-price", "150", "--search", "Кінг", "--sql", stdout=out)
+
+    output = out.getvalue()
+    assert "Вбивство в «Східному експресі»" in output  # 140 UAH, in stock: price <= 150
+    assert "Собака Баскервілів" in output  # stock 0: the "out of stock" section
+    assert "Воно" in output and "Сяйво" in output  # found by the author "Кінг"
+    assert "aggregate: whole store" in output
+    assert "SQL: SELECT" in output
+
+
+def test_book_stats_on_an_empty_catalog():
+    out = StringIO()
+
+    call_command("book_stats", stdout=out)
+
+    assert "(nothing found)" in out.getvalue()

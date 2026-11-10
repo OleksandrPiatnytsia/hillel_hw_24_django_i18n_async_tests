@@ -109,6 +109,38 @@ def test_cart_add_more_than_stock_warns(client):
     assert client.session["cart"] == {str(book.pk): {"quantity": 2}}
 
 
+@pytest.mark.parametrize("quantity", ["0", "-1", "two"])
+def test_cart_add_with_wrong_quantity_is_an_error(client, quantity):
+    book = BookFactory()
+
+    response = client.post(reverse("cart:add", args=[book.pk]), {"quantity": quantity})
+
+    assert message_levels(response) == ["error"]
+    assert not client.session.get("cart")
+
+
+def test_cart_add_out_of_stock_book_is_an_error(client):
+    book = BookFactory(stock=0)
+
+    response = client.post(reverse("cart:add", args=[book.pk]), {"quantity": 1})
+
+    assert message_levels(response) == ["error"]
+
+
+def test_cart_remove_and_clear(client):
+    first, second = BookFactory(), BookFactory()
+    for book in (first, second):
+        client.post(reverse("cart:add", args=[book.pk]), {"quantity": 1})
+
+    removed = client.post(reverse("cart:remove", args=[first.pk]))
+    assert list(client.session["cart"]) == [str(second.pk)]
+    assert message_levels(removed)[-1] == "success"
+
+    cleared = client.post(reverse("cart:clear"))
+    assertRedirects(cleared, reverse("cart:detail"))
+    assert not client.session.get("cart")
+
+
 # ---------------------------------------------------------------------------
 # Orders and payments: access rules
 # ---------------------------------------------------------------------------
